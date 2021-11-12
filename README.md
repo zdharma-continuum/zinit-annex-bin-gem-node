@@ -1,8 +1,10 @@
+# zinit-annex-bin-gem-node
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [z-a-bin-gem-node](#z-a-bin-gem-node)
+- [zinit-annex-bin-gem-node](#z-a-bin-gem-node)
   - [Introduction](#introduction)
   - [Installation](#installation)
   - [How it works – bird's-eye view](#how-it-works--birds-eye-view)
@@ -24,8 +26,6 @@
 - [Cygwin support](#cygwin-support)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# z-a-bin-gem-node
 
 ## Introduction
 
@@ -61,7 +61,7 @@ allows to:
 Simply load like a regular plugin, i.e.:
 
 ```zsh
-zinit light zinit-zsh/z-a-bin-gem-node
+zinit light zinit-zsh/zinit-annex-bin-gem-node
 ```
 
 After executing this command you can then use the new ice-mods provided by
@@ -80,9 +80,9 @@ forwarder-functions elaborated on in the following text:
 Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:
 
-![diagram](https://raw.githubusercontent.com/zinit-zsh/z-a-bin-gem-node/master/images/diag.png)
+![diagram](https://raw.githubusercontent.com/zinit-zsh/zinit-annex-bin-gem-node/master/images/diag.png)
 
-This way there is no need to add anything to `$PATH` – `z-a-bin-gem-node`
+This way there is no need to add anything to `$PATH` – `zinit-annex-bin-gem-node`
 will automatically create a function that will wrap the binary and provide it
 on the command line like if it was being placed in the `$PATH`.
 
@@ -117,8 +117,8 @@ After this command, the `$PATH` variable will contain e.g.:
 ```
 
 For many such programs loaded as plugins the PATH can become quite cluttered.
-I've had 26 entries before switching to `z-a-bin-gem-node`. To solve this,
-load with use of `sbin''` ice provided and handled by `z-a-bin-gem-node`:
+I've had 26 entries before switching to `zinit-annex-bin-gem-node`. To solve this,
+load with use of `sbin''` ice provided and handled by `zinit-annex-bin-gem-node`:
 
 ```zsh
 zinit ice from"gh-r" sbin"fzf"
@@ -357,7 +357,7 @@ Example:
 myfun () {
         local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
         local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
-        local oldpwd="/home/sg/.zinit/plugins/zinit---z-a-bin-gem-node"
+        local oldpwd="/home/sg/.zinit/plugins/zinit---zinit-annex-bin-gem-node"
         () {
                 setopt localoptions noautopushd
                 builtin cd -q "/home/sg/.zinit/plugins/zdharma---null"
@@ -416,7 +416,7 @@ There's an additional Zinit command that's provided by this annex
 currently stored under `$ZPFX/bin`. Example invocation:
 
 ![shim-list
-invocation](https://raw.githubusercontent.com/zinit-zsh/z-a-bin-gem-node/master/images/shim-list.png)
+invocation](https://raw.githubusercontent.com/zinit-zsh/zinit-annex-bin-gem-node/master/images/shim-list.png)
 
 Available options are:
 

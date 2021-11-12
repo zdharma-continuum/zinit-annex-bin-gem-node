@@ -18,28 +18,28 @@ autoload .za-bgn-bin-or-src-function-body \
 # An empty stub to fill the help handler fields
 →za-bgn-null-handler() { :; }
 
-@zinit-register-annex "z-a-bin-gem-node" \
+@zinit-register-annex "zinit-annex-bin-gem-node" \
     subcommand:shim-list \
     →za-bgn-shim-list \
     →za-bgn-null-handler
 
-@zinit-register-annex "z-a-bin-gem-node" \
+@zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:\!atload-50 \
     →za-bgn-atload-handler \
     →za-bgn-help-handler \
     "fbin''|sbin|sbin''|gem''|node''|pip''|fmod''|fsrc''|ferc''" # also register new ices
 
-@zinit-register-annex "z-a-bin-gem-node" \
+@zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:atclone-50 \
     →za-bgn-atclone-handler \
     →za-bgn-null-handler
 
-@zinit-register-annex "z-a-bin-gem-node" \
+@zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:\%atpull-50 \
     →za-bgn-atclone-handler \
     →za-bgn-null-handler
 
-@zinit-register-annex "z-a-bin-gem-node" \
+@zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:atdelete-50 \
     →za-bgn-atdelete-handler \
     →za-bgn-null-handler
