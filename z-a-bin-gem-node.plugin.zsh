@@ -16,12 +16,12 @@ autoload .za-bgn-bin-or-src-function-body \
     za-bgn-shim-list
 
 # An empty stub to fill the help handler fields
-→za-bgn-null-handler() { :; }
+za-bgn-null-handler() { :; }
 
 @zinit-register-annex "zinit-annex-bin-gem-node" \
     subcommand:shim-list \
     za-bgn-shim-list \
-    →za-bgn-null-handler
+    za-bgn-null-handler
 
 @zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:\!atload-50 \
@@ -32,15 +32,15 @@ autoload .za-bgn-bin-or-src-function-body \
 @zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:atclone-50 \
     za-bgn-atclone-handler \
-    →za-bgn-null-handler
+    za-bgn-null-handler
 
 @zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:\%atpull-50 \
     za-bgn-atclone-handler \
-    →za-bgn-null-handler
+    za-bgn-null-handler
 
 @zinit-register-annex "zinit-annex-bin-gem-node" \
     hook:atdelete-50 \
     za-bgn-atdelete-handler \
-    →za-bgn-null-handler
+    za-bgn-null-handler
 
