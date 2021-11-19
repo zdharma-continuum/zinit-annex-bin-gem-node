@@ -1,7 +1,7 @@
 # Copyright (c) 2019-2020 Sebastian Gniazdowski
 # License MIT
 
-→za-bgn-atload-handler() {
+za-bgn-atload-handler() {
 
 emulate -RL zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops
