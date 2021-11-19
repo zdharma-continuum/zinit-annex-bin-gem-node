@@ -8,7 +8,7 @@
 #		    [-o|--one-line] [-s|--short]
 #
 
-→za-bgn-shim-list() {
+za-bgn-shim-list() {
 
 emulate -LR zsh
 setopt extended_glob warn_create_global typeset_silent \
