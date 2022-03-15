@@ -80,7 +80,7 @@ forwarder-functions elaborated on in the following text:
 Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:
 
-![diagram](https://raw.githubusercontent.com/zinit-zsh/zinit-annex-bin-gem-node/master/images/diag.png)
+![diagram](https://raw.githubusercontent.com/zdharma-continuum/zinit-annex-bin-gem-node/main/images/diag.png)
 
 This way there is no need to add anything to `$PATH` – `zinit-annex-bin-gem-node`
 will automatically create a function that will wrap the binary and provide it
