@@ -416,7 +416,7 @@ There's an additional Zinit command that's provided by this annex
 currently stored under `$ZPFX/bin`. Example invocation:
 
 ![shim-list
-invocation](https://raw.githubusercontent.com/zinit-zsh/zinit-annex-bin-gem-node/master/images/shim-list.png)
+invocation](https://raw.githubusercontent.com/zdharma-continuum/zinit-annex-bin-gem-node/main/images/shim-list.png)
 
 Available options are:
 
