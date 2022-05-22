@@ -61,7 +61,7 @@ allows to:
 Simply load like a regular plugin, i.e.:
 
 ```zsh
-zinit light zinit-zsh/zinit-annex-bin-gem-node
+zinit light zdharma-continuum/zinit-annex-bin-gem-node
 ```
 
 After executing this command you can then use the new ice-mods provided by
