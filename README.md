@@ -88,7 +88,7 @@ After this command, the `$PATH` variable will contain e.g.:
 
 ```zsh
 % print $PATH
-/home/sg/.zinit/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
+/home/zi/.zinit/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
 ```
 
 For many such programs loaded as plugins the PATH can become quite cluttered. I've had 26 entries
@@ -109,7 +109,7 @@ Zinit when it is being sourced:
 #!/usr/bin/env zsh
 
 function fzf {
-  local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
+  local bindir="/home/zi/.zinit/plugins/junegunn---fzf-bin"
   "$bindir"/"fzf" "$@"
 }
 
@@ -135,7 +135,7 @@ There are 7 ice-modifiers provided and handled by the annex. They are:
 
 **The ice-modifiers in detail:**
 
-## sbin<a name="sbin"></a>
+### sbin<a name="sbin"></a>
 
 It creates the so called `shim` known from `rbenv` – a wrapper script that forwards the call to the
 actual binary. The script is created always under the same, standard and single `$PATH` entry:
@@ -146,11 +146,7 @@ The flags have the same meaning as with `fbin''` ice.
 Example:
 
 ```zsh
-% zinit delete junegunn/fzf-bin
-Delete /home/sg/.zinit/plugins/junegunn---fzf-bin?
-[yY/n…]
-y
-Done (action executed, exit code: 0)
+% zinit delete junegunn/fzf-bin --yes
 % zinit ice from"gh-r" sbin"fzf"
 % zinit load junegunn/fzf-bin
 …installation messages…
@@ -158,7 +154,7 @@ Done (action executed, exit code: 0)
 #!/usr/bin/env zsh
 
 function fzf {
-  local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
+  local bindir="/home/zi/.zinit/plugins/junegunn---fzf-bin"
   "$bindir"/"fzf" "$@"
 }
 
@@ -174,7 +170,7 @@ fzf "$@"
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-## fbin<a name="fbin"></a>
+### fbin<a name="fbin"></a>
 
 Creates a wrapper function of the name the same as the last segment of the path or as
 `{name-of-the-function}`. The optional preceding flags mean:
@@ -196,8 +192,8 @@ Example:
 % zinit load junegunn/fzf-bin
 % which myfzf
 myfzf () {
-  local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
-  local -x GEM_HOME="/home/sg/.zinit/plugins/junegunn---fzf-bin"
+  local bindir="/home/zi/.zinit/plugins/junegunn---fzf-bin"
+  local -x GEM_HOME="/home/zi/.zinit/plugins/junegunn---fzf-bin"
   "$bindir"/"fzf" "$@"
 }
 ```
@@ -211,7 +207,7 @@ myfzf () {
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-## gem<a name="gem"></a>
+### gem<a name="gem"></a>
 
 Installs the gem of name `{gem-name}` with `$GEM_HOME` set to the plugin's or snippet's directory.
 In other words, the gem and its dependencies will be installed locally in that directory.
@@ -223,16 +219,16 @@ Example:
 
 ```zsh
 % zinit ice gem'!asciidoctor'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 % which asciidoctor
 asciidoctor () {
-  local bindir="/home/sg/.zinit/plugins/zdharma---null/bin"
-  local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
+  local bindir="/home/zi/.zinit/plugins/zdharma-continuum---null/bin"
+  local -x GEM_HOME="/home/zi/.zinit/plugins/zdharma-continuum---null"
   "$bindir"/"asciidoctor" "$@"
 }
 ```
 
-## node<a name="node"></a>
+### node<a name="node"></a>
 
 Installs the node module of name `{node-module}` inside the plugin's or snippet's directory.
 
@@ -242,18 +238,14 @@ ice.
 Example:
 
 ```zsh
-% zinit delete zdharma/null
-Delete /home/sg/.zinit/plugins/zdharma---null?
-[yY/n…]
-y
-Done (action executed, exit code: 0)
+% zinit delete zdharma-continuum --yes
 % zinit ice node'remark <- !remark-cli -> remark; remark-man'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 …installation messages…
 % which remark
 remark () {
-  local bindir="/home/sg/.zinit/plugins/zdharma---null/node_modules/.bin"
-  local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
+  local bindir="/home/zi/.zinit/plugins/zdharma-continuum---null/node_modules/.bin"
+  local -x NODE_PATH="/home/zi/.zinit/plugins/zdharma-continuum---null"/node_modules
   "$bindir"/"remark" "$@"
 }
 ```
@@ -261,7 +253,7 @@ remark () {
 In this case the name of the binary program provided by the node module is different from its name,
 hence the second form with the `b <- a -> c` syntax has been used.
 
-## pip<a name="pip"></a>
+### pip''<a name="pip"></a>
 
 Installs the node module of name `{pip-package}` inside the plugin's or snippet's directory.
 
@@ -271,18 +263,14 @@ ice.
 Example:
 
 ```zsh
-% zinit delete zdharma/null
-Delete /home/sg/.zinit/plugins/zdharma---null?
-[yY/n…]
-y
-Done (action executed, exit code: 0)
+% zinit delete zdharma-continuum/null --yes
 % zinit ice node'ansible <- !ansible -> ansible; ansible-lint'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 …installation messages…
 % which remark
 ansible () {
-  local bindir="/home/sg/.zinit/plugins/zdharma---null/venv/bin"
-  local -x VIRTUALENV="/home/sg/.zinit/plugins/zdharma---null"/venv
+  local bindir="/home/zi/.zinit/plugins/zdharma-continuum---null/venv/bin"
+  local -x VIRTUALENV="/home/zi/.zinit/plugins/zdharma-continuum---null"/venv
   "$bindir"/"ansible" "$@"
 }
 ```
@@ -290,7 +278,7 @@ ansible () {
 In this case the name of the binary program provided by the node module is different from its name,
 hence the second form with the `b <- a -> c` syntax has been used.
 
-## fmod<a name="fmod"></a>
+### fmod<a name="fmod"></a>
 
 It wraps given function with the ability to set `$GEM_HOME`, etc. – the meaning of the `g`,`n` and
 `c` flags is the same as in the `fbin''` ice.
@@ -300,16 +288,18 @@ Example:
 ```zsh
 $ myfun() { pwd; ls -1; }
 $ zinit ice fmod'cgn:myfun'
-$ zinit load zdharma/null
-$
+$ zinit load zdharma-continuum/null
+```
+
+```zsh
 $ which myfun
 myfun () {
-  local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
-  local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
-  local oldpwd="/home/sg/.zinit/plugins/zinit---zinit-annex-bin-gem-node"
+  local -x GEM_HOME="/home/zi/.zinit/plugins/zdharma-continuum---null"
+  local -x NODE_PATH="/home/zi/.zinit/plugins/zdharma-continuum---null"/node_modules
+  local oldpwd="/home/zi/.zinit/plugins/zinit---zinit-annex-bin-gem-node"
   () {
     setopt localoptions noautopushd
-    builtin cd -q "/home/sg/.zinit/plugins/zdharma---null"
+    builtin cd -q "/home/zi/.zinit/plugins/zdharma-continuum---null"
   }
   "myfun--za-bgn-orig" "$@"
   () {
@@ -318,32 +308,32 @@ myfun () {
   }
 }
 $ myfun
-/home/sg/.zinit/plugins/zdharma---null
+/home/zi/.zinit/plugins/zdharma-continuum---null
 LICENSE
 README.md
 ```
 
-## fsrc<a name="fsrc"></a>
+### fsrc''<a name="fsrc"></a>
 
 Creates a wrapper function that at each invocation sources the given file. The second ice, `ferc''`
 works the same with the single difference that it uses `eval "$(<{path-to-script})"` instead of
-`source "{path-to-script}"` to load the script.
+`source <filepath-to-script>` to load the script.
 
 Example:
 
 ```zsh
 $ zinit ice fsrc"myscript -> myfunc" ferc"myscript"
-$ zinit load zdharma/null
+$ zinit load zdharma-continuum/null
 
 $ which myfunc
 myfunc () {
-  local bindir="/home/sg/.zinit/plugins/zdharma---null"
+  local bindir="/home/zi/.zinit/plugins/zdharma-continuum---null"
   () { source "$bindir"/"myscript"; } "$@"
 }
 
 $ which myscript
 myscript () {
-  local bindir="/home/sg/.zinit/snippets/OMZ::plugins--git/git.plugin.zsh"
+  local bindir="/home/zi/.zinit/snippets/OMZ::plugins--git/git.plugin.zsh"
   () { eval "$(<"$bindir"/"myscript")"; } "$@"
 }
 ```
@@ -351,7 +341,7 @@ myscript () {
 **The ices can be empty**. They will then try to create the function for trailing component of the
 `id-as` ice and the other cases, in the same way as with the `fbin` ice.
 
-# Additional Zinit commands<a name="additional-zinit-commands"></a>
+## Additional Zinit commands<a name="additional-zinit-commands"></a>
 
 There's an additional Zinit command that's provided by this annex –`shim-list`. It searches for and
 displays any shims that are being currently stored under `$ZPFX/bin`. Example invocation:
@@ -375,7 +365,7 @@ The options' meanings:
 | `-s/--short`     | Omit the plugin/snippet for a shim                                           |
 | `-t/--this-dir`  | Display shims in the current directory instead of `$ZPFX/bin`                |
 
-# Cygwin Support<a name="cygwin-support"></a>
+## Cygwin Support<a name="cygwin-support"></a>
 
 The `sbin''` ice has an explicit Cygwin support – it creates additional, **extra shim files** –
 Windows batch scripts that allow to run the shielded applications from e.g.: Windows run dialog – if
@@ -385,5 +375,5 @@ ones (which are also being created, normally) plus the `.cmd` extension. You can
 e.g.: installing Firefox from the Zinit package via:
 
 ````zsh
-zinit pack=bgn for firefox ```
+zinit pack'bgn' for firefox ```
 ````
