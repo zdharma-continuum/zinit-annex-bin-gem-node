@@ -1,6 +1,9 @@
-# Copyright (c) 2019 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 2; sh-basic-offset: 2; indent-tabs-mode: nil;  -*-
 #
+# Copyright (c) 2019-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
+
 # Returns the body of the function wrapping a function
 
 local name="$1" target_func="$2" dir="${3#%}"
@@ -27,5 +30,3 @@ ${(qqq)target_func} \"\$@\""
 REPLY+="$nl"
 REPLY+="${${(M)set_cwd:#1}:+"() { setopt localoptions noautopushd; builtin cd -q \"\$oldpwd\"; }"}
 }"
-
-# vim:ft=zsh:sw=4:sts=4:et
