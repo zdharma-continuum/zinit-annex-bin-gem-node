@@ -1,12 +1,11 @@
-# -*- mode: sh; sh-indentation: 4; sh-basic-offset: 4; indent-tabs-mode: nil;  -*-
-
-# Copyright 2020 Sebastian Gniazdowski
-# License: MIT
-
-# Synopsis:
-#   zinit shim-list [-t|--this-dir] [-c|--cat] [-i|--from-ices] \
-  #		    [-o|--one-line] [-s|--short]
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 2; sh-basic-offset: 2; indent-tabs-mode: nil;  -*-
 #
+# Copyright (c) 2019-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
+
+# Usage:
+#   zinit shim-list [-t|--this-dir] [-c|--cat] [-i|--from-ices] [-o|--one-line] [-s|--short]
 
 za-bgn-shim-list() {
 

@@ -1,5 +1,8 @@
-# Copyright (c) 2019-2020 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 2; sh-basic-offset: 2; indent-tabs-mode: nil;  -*-
+#
+# Copyright (c) 2019-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 za-bgn-atclone-handler() {
 
@@ -265,5 +268,3 @@ za-bgn-atclone-handler() {
     }
   }
 }
-
-# vim:ft=zsh:sw=4:sts=4:et

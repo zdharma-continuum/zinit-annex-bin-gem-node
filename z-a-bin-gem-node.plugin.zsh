@@ -1,5 +1,8 @@
-# Copyright (c) 2019-2020 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 2; sh-basic-offset: 2; indent-tabs-mode: nil;  -*-
+#
+# Copyright (c) 2019-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 # According to the Zsh Plugin Standard:
 # https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
@@ -43,4 +46,3 @@ za-bgn-null-handler() { :; }
   hook:atdelete-50 \
   za-bgn-atdelete-handler \
   za-bgn-null-handler
-
