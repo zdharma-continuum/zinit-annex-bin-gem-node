@@ -1,5 +1,22 @@
 # zinit-annex-bin-gem-node<a name="zinit-annex-bin-gem-node"></a>
 
+<!-- mdformat-toc start --slug=github --maxlevel=6 --minlevel=2 -->
+
+- [Installation](#installation)
+- [Technical details](#technical-details)
+- [Ice Modifiers](#ice-modifiers)
+  - [sbin''](#sbin)
+  - [fbin''](#fbin)
+  - [gem''](#gem)
+  - [node''](#node)
+  - [pip''](#pip)
+  - [fmod''](#fmod)
+  - [fsrc''](#fsrc)
+- [Additional Zinit commands](#additional-zinit-commands)
+- [Cygwin Support](#cygwin-support)
+
+<!-- mdformat-toc end -->
+
 A Zsh-Zinit annex (i.e. an extension) that provides functionality, which allows to:
 
 1. Run programs and scripts without adding anything to `$PATH`,
@@ -18,23 +35,6 @@ A Zsh-Zinit annex (i.e. an extension) that provides functionality, which allows 
    `$ZPFX/bin`, not a **function** (the first item uses a function-based mechanism),
 6. Automatic updates of Ruby gems and Node modules during regular plugin and snippet updates with
    `zinit update …`.
-
-<!-- mdformat-toc start --slug=github --maxlevel=6 --minlevel=2 -->
-
-- [Installation](#installation)
-- [Technical details](#technical-details)
-- [Ice Modifiers](#ice-modifiers)
-  - [sbin''](#sbin)
-  - [fbin''](#fbin)
-  - [gem''](#gem)
-  - [node''](#node)
-  - [pip''](#pip)
-  - [fmod''](#fmod)
-  - [fsrc''](#fsrc)
-- [Additional Zinit commands](#additional-zinit-commands)
-- [Cygwin Support](#cygwin-support)
-
-<!-- mdformat-toc end -->
 
 ## Installation<a name="installation"></a>
 
