@@ -7,14 +7,12 @@
 # FUNCTION: .za-bgn-bin-or-src-function-body
 # Returns the body of the function wrapping a binary
 local name="$2" bin="$3" dir="${4#%}"
-integer run_type="$1" set_gem_home="$5" \
-    set_node_path="$6" set_virtualenv="$7" set_cwd="$8" \
-    use_all_null="$9" use_err_null="$10" use_out_null="$11"
+integer run_type="$1" set_gem_home="$5" set_node_path="$6" set_virtualenv="$7" set_cwd="$8" use_all_null="$9" use_err_null="$10" use_out_null="$11"
 
 local nl=$'\n' tab=$'    '
 
-dir=`cygpath -w "$dir"`
-local binh=`command cygpath -w "${bin:h}"` bint=`command cygpath -w "${bin:t}"`
+dir=$(cygpath -w "$dir")
+local binh=$(command cygpath -w "${bin:h}"` bint=`command cygpath -w "${bin:t}")
 
 REPLY="
 @echo off
@@ -40,5 +38,4 @@ fi
 (( use_out_null )) && REPLY+=" >NUL"
 
 REPLY+="$nl"
-REPLY+="${${(M)set_cwd:#1}:+"${nl}cd %oldpwd%"
-}"
+REPLY+="${${(M)set_cwd:#1}:+"${nl}cd %oldpwd%"}"
