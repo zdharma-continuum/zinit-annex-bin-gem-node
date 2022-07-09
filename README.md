@@ -6,13 +6,15 @@
 - [Installation](#installation)
 - [Technical details](#technical-details)
 - [Ice Modifiers](#ice-modifiers)
-- [sbin](#sbin)
-- [fbin](#fbin)
-- [gem](#gem)
-- [node](#node)
-- [pip](#pip)
-- [fmod](#fmod)
-- [fsrc](#fsrc)
+  - [sbin''](#sbin)
+  - [fbin''](#fbin)
+  - [gem''](#gem)
+  - [node''](#node)
+  - [pip''](#pip)
+  - [fmod''](#fmod)
+  - [fsrc''](#fsrc)
+- [Additional Zinit commands](#additional-zinit-commands)
+- [Cygwin Support](#cygwin-support)
 
 <!-- mdformat-toc end -->
 
@@ -123,19 +125,18 @@ Thus, no `$PATH` changes are needed!
 
 There are 7 ice-modifiers provided and handled by the annex. They are:
 
-1. `sbin''` – creates `shims` for binaries and scripts.
-2. `fbin''` – creates functions for binaries and scripts.
-3. `gem''` – installs and updates gems + creates functions for gems' binaries.
-4. `node''` – installs and updates node_modules + creates functions for binaries of the modules.
-5. `pip''` – installs and updates python packages into a virtualenv + creates functions for binaries
-   of the packages.
-6. `fmod''` – creates wrapping functions for other functions.
-7. `fsrc''` – creates functions that source given scripts.
-8. `ferc''` – the same as `fsrc''`, but using an alternate script-loading method.
+| ice      | description                                                                                        |
+| -------- | -------------------------------------------------------------------------------------------------- |
+| `fbin''` | creates functions for binaries and scripts.                                                        |
+| `ferc''` | the same as `fsrc''`, but using an alternate script-loading method.                                |
+| `fmod''` | creates wrapping functions for other functions.                                                    |
+| `fsrc''` | creates functions that source given scripts.                                                       |
+| `gem''`  | installs and updates gems + creates functions for gems' binaries.                                  |
+| `node''` | installs and updates node_modules + creates functions for binaries of the modules.                 |
+| `pip''`  | installs and updates python packages into a virtualenv + creates functions for the package binary. |
+| `sbin''` | creates `shims` for binaries and scripts.                                                          |
 
-**The ice-modifiers in detail:**
-
-### sbin<a name="sbin"></a>
+### sbin''<a name="sbin"></a>
 
 It creates the so called `shim` known from `rbenv` – a wrapper script that forwards the call to the
 actual binary. The script is created always under the same, standard and single `$PATH` entry:
@@ -170,7 +171,7 @@ fzf "$@"
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-### fbin<a name="fbin"></a>
+### fbin''<a name="fbin"></a>
 
 Creates a wrapper function of the name the same as the last segment of the path or as
 `{name-of-the-function}`. The optional preceding flags mean:
@@ -207,7 +208,7 @@ myfzf () {
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-### gem<a name="gem"></a>
+### gem''<a name="gem"></a>
 
 Installs the gem of name `{gem-name}` with `$GEM_HOME` set to the plugin's or snippet's directory.
 In other words, the gem and its dependencies will be installed locally in that directory.
@@ -228,7 +229,7 @@ asciidoctor () {
 }
 ```
 
-### node<a name="node"></a>
+### node''<a name="node"></a>
 
 Installs the node module of name `{node-module}` inside the plugin's or snippet's directory.
 
@@ -278,7 +279,7 @@ ansible () {
 In this case the name of the binary program provided by the node module is different from its name,
 hence the second form with the `b <- a -> c` syntax has been used.
 
-### fmod<a name="fmod"></a>
+### fmod''<a name="fmod"></a>
 
 It wraps given function with the ability to set `$GEM_HOME`, etc. – the meaning of the `g`,`n` and
 `c` flags is the same as in the `fbin''` ice.
