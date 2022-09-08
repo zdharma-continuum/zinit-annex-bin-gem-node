@@ -1,57 +1,60 @@
-# Copyright (c) 2019-2020 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 2; sh-basic-offset: 2; indent-tabs-mode: nil;  -*-
+#
+# Copyright (c) 2019-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 za-bgn-atclone-handler() {
 
-emulate -RL zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops
+  emulate -RL zsh
+  setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-if [[ "$1" = plugin ]] {
+  if [[ "$1" = plugin ]] {
     local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
-} else {
+    } else {
     local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
-}
+  }
 
-local nl=$'\n'
+  local nl=$'\n'
 
-if [[ -n "${ICE[gem]}" ]] {
+  if [[ -n "${ICE[gem]}" ]] {
     local -a gem_defs srcdst tmpsdst gems
     gem_defs=( "${(s.;.)ICE[gem]}" )
 
     local gem
 
     for gem ( $gem_defs ) {
-        srcdst=( ${(@s.->.)gem} )
-        tmpsdst=( ${(@s.<-.)srcdst[1]} )
-        if (( ${#tmpsdst} > 1 )); then
-            srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
-        else
-            srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
-        fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-        srcdst[2]=${srcdst[2]#\!}
+      srcdst=( ${(@s.->.)gem} )
+      tmpsdst=( ${(@s.<-.)srcdst[1]} )
+      if (( ${#tmpsdst} > 1 )); then
+        srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
+      else
+        srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
+      fi
+      srcdst=( "${srcdst[@]//( (#s)[[:space:]]##|[[:space:]]##(#e) )/}" )
+      srcdst[2]=${srcdst[2]#\!}
 
-        # Substitute the standard keywords and param''-s
-        @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
+      # Substitute the standard keywords and param''-s
+      @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
 
-        gems+=( ${srcdst[2]} )
+      gems+=( ${srcdst[2]} )
     }
 
     (( ${#gems} )) && {
-        if [[ $hook = *atclone-<-> ]]; then
-            command gem install -q --no-user-install -i "$dir" "${gems[@]}"
-        elif [[ $hook = *atpull-<-> ]]; then
-            if (( !OPTS[opt_-q,--quiet] )) {
-                print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the gems...%f"
-                command gem update -q --no-user-install -i "$dir" "${gems[@]}"
-            } else {
-                command gem update -q --no-user-install -i "$dir" "${gems[@]}" &> /dev/null
-            }
-        fi
+      if [[ $hook = *atclone-<-> ]]; then
+        command gem install -q --no-user-install -i "$dir" "${gems[@]}"
+      elif [[ $hook = *atpull-<-> ]]; then
+        if (( !OPTS[opt_-q,--quiet] )) {
+          print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the gems...%f"
+          command gem update -q --no-user-install -i "$dir" "${gems[@]}"
+          } else {
+          command gem update -q --no-user-install -i "$dir" "${gems[@]}" &> /dev/null
+        }
+      fi
     }
-}
+  }
 
-if [[ -n "${ICE[pip]}" ]] {
+  if [[ -n "${ICE[pip]}" ]] {
     local -a pip_defs srcdst tmpsdst imods umods
     pip_defs=( "${(s.;.)ICE[pip]}" )
 
@@ -59,45 +62,44 @@ if [[ -n "${ICE[pip]}" ]] {
     integer perform_update=0
 
     for pip ( $pip_defs ) {
-        srcdst=( ${(@s.->.)pip} )
-        tmpsdst=( ${(@s.<-.)srcdst[1]} )
-        if (( ${#tmpsdst} > 1 )); then
-            srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
-        else
-            srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
-        fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-        srcdst[2]=${srcdst[2]#\!}
+      srcdst=( ${(@s.->.)pip} )
+      tmpsdst=( ${(@s.<-.)srcdst[1]} )
+      if (( ${#tmpsdst} > 1 )); then
+        srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
+      else
+        srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
+      fi
+      srcdst=( "${srcdst[@]//( (#s)[[:space:]]##|[[:space:]]##(#e) )/}" )
+      srcdst[2]=${srcdst[2]#\!}
 
-        # Substitute the standard keywords and param''-s
-        @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
+      # Substitute the standard keywords and param''-s
+      @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
 
-        if [[ "$hook" = *atclone-<-> ]]; then
-            imods+=( ${srcdst[2]} )
-        elif [[ "$hook" = *atpull-<-> && -n ${srcdst[2]} ]]; then
-            umods+=( ${srcdst[2]} )
-            perform_update=1
-            break
-        fi
+      if [[ "$hook" = *atclone-<-> ]]; then
+        imods+=( ${srcdst[2]} )
+      elif [[ "$hook" = *atpull-<-> && -n ${srcdst[2]} ]]; then
+        umods+=( ${srcdst[2]} )
+        perform_update=1
+        break
+      fi
     }
 
-    (( ${#imods} )) && \
-        ( builtin cd -q "$dir" && command python3 -m venv venv && VIRTUALENV=venv(:A) command venv/bin/pip install "${imods[@]}" )
+    (( ${#imods} )) && ( builtin cd -q "$dir" && command python3 -m venv venv && VIRTUALENV=venv(:A) command venv/bin/pip install "${imods[@]}" )
 
     (( perform_update )) && (( ${#umods} )) && \
-        (
-            builtin cd -q "$dir" && {
-                if (( !OPTS[opt_-q,--quiet] )) {
-                    print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the pip packages...%f"
-                    VIRTUALENV=venv(:A) command venv/bin/pip install --upgrade "${umods[@]}"
-                } else {
-                    VIRTUALENV=venv(:A) command venv/bin/pip install -q --upgrade "${umods[@]}"
-                }
-             }
-        )
-}
+      (
+      builtin cd -q "$dir" && {
+        if (( !OPTS[opt_-q,--quiet] )) {
+          print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the pip packages...%f"
+          VIRTUALENV=venv(:A) command venv/bin/pip install --upgrade "${umods[@]}"
+          } else {
+          VIRTUALENV=venv(:A) command venv/bin/pip install -q --upgrade "${umods[@]}"
+        }
+      }
+    )
+  }
 
-if [[ -n "${ICE[node]}" ]] {
+  if [[ -n "${ICE[node]}" ]] {
     local -a node_defs srcdst tmpsdst mods
     node_defs=( "${(s.;.)ICE[node]}" )
 
@@ -105,177 +107,164 @@ if [[ -n "${ICE[node]}" ]] {
     integer perform_update=0
 
     for node ( $node_defs ) {
-        srcdst=( ${(@s.->.)node} )
-        tmpsdst=( ${(@s.<-.)srcdst[1]} )
-        if (( ${#tmpsdst} > 1 )); then
-            srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
-        else
-            srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
-        fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-        srcdst[2]=${srcdst[2]#\!}
+      srcdst=( ${(@s.->.)node} )
+      tmpsdst=( ${(@s.<-.)srcdst[1]} )
+      if (( ${#tmpsdst} > 1 )); then
+        srcdst=( "${tmpsdst[1]}" "${tmpsdst[2]}" "${srcdst[2]:-${tmpdist[2]#\!}}" )
+      else
+        srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
+      fi
+      srcdst=( "${srcdst[@]//( (#s)[[:space:]]##|[[:space:]]##(#e) )/}" )
+      srcdst[2]=${srcdst[2]#\!}
 
-        # Substitute the standard keywords and param''-s
-        @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
+      # Substitute the standard keywords and param''-s
+      @zinit-substitute 'srcdst[1]' 'srcdst[2]' 'srcdst[3]'
 
-        if [[ "$hook" = *atclone-<-> ]]; then
-            mods+=( ${srcdst[2]} )
-        elif [[ "$hook" = *atpull-<-> && -n ${srcdst[2]} ]]; then
-            perform_update=1
-            break
-        fi
+      if [[ "$hook" = *atclone-<-> ]]; then
+        mods+=( ${srcdst[2]} )
+      elif [[ "$hook" = *atpull-<-> && -n ${srcdst[2]} ]]; then
+        perform_update=1
+        break
+      fi
     }
 
     (( ${#mods} )) && \
-        ( builtin cd -q "$dir" && command npm --silent install "${mods[@]}" )
+      ( builtin cd -q "$dir" && command npm --silent install "${mods[@]}" )
 
     (( perform_update )) && \
-        (
-            builtin cd -q "$dir" && {
-                if (( !OPTS[opt_-q,--quiet] )) {
-                    print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the node modules...%f"
-                    command npm --silent update
-                } else {
-                    command npm --silent update &> /dev/null
-                }
-             }
-        )
-}
+      (
+      builtin cd -q "$dir" && {
+        if (( !OPTS[opt_-q,--quiet] )) {
+          print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the node modules...%f"
+          command npm --silent update
+          } else {
+          command npm --silent update &> /dev/null
+        }
+      }
+    )
+  }
 
-#
-# sbin'' ice – creation of shims (the name borrowed from rbenv)
-#
+  #
+  # sbin'' ice – creation of shims (the name borrowed from rbenv)
+  #
 
-if (( ${+ICE[sbin]} )) {
+  if (( ${+ICE[sbin]} )) {
     local -a sbins srcdst
     sbins=( ${(s.;.)ICE[sbin]} )
-
     local sbin
-
     (
-        # CD for the globbing through eval
-        builtin cd -q "$dir" || return
+      # CD for the globbing through eval
+      builtin cd -q "$dir" || return
 
-        for sbin ( $sbins "" ) {
-            integer set_gem_home=0 set_node_path=0 set_virtualenv=0 set_cwd=0 \
-                    use_all_null=0 use_err_null=0 use_out_null=0
+      for sbin ( $sbins "" ) {
+        integer set_cwd=0 set_gem_home=0 set_node_path=0 set_virtualenv=0 use_all_null=0 use_err_null=0 use_out_null=0
+        if [[ -z $sbin && ${#sbins} -eq 0 ]]; then
+          if [[ -f $dir/${id_as:t} ]]; then
+            sbin="$dir/${id_as:t}"
+          elif [[ -n $plugin && -f $dir/$plugin ]]; then
+            sbin="$dir/$plugin"
+          elif [[ -n $url && -f $dir/${url:t} ]]; then
+            sbin="$dir/${url:t}"
+          else
+            local -a files
+            files=( $dir/*(*Nnon:t) )
+            if (( ${#files} )); then
+              sbin="${files[1]}"
+            else
+              print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
+              break
+            fi
+          fi
+        elif [[ -z $sbin ]]; then
+          continue
+        fi
 
-            if [[ -z $sbin && ${#sbins} -eq 0 ]] {
-                if [[ -f $dir/${id_as:t} ]]; then
-                    sbin="$dir/${id_as:t}"
-                elif [[ -n $plugin && -f $dir/$plugin ]]; then
-                    sbin="$dir/$plugin"
-                elif [[ -n $url && -f $dir/${url:t} ]]; then
-                    sbin="$dir/${url:t}"
-                else
-                    local -a files
-                    files=( $dir/*(*Nnon:t) )
-                    if (( ${#files} )); then
-                        sbin="${files[1]}"
-                    else
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
-                        break
-                    fi
-                fi
-            } elif [[ -z $sbin ]] {
-                continue
-            }
+        srcdst=( ${(@s.->.)sbin} )
+        srcdst=( "${srcdst[@]//( (#s)[[:space:]]##|[[:space:]]##(#e) )/}" )
+        [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1
+        [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1
+        [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1
+        [[ ${srcdst[1]} = [gnpcNEO]#c[gnpcNEO]#:* ]] && set_cwd=1
+        [[ ${srcdst[1]} = [gnpcNEO]#N[gnpcNEO]#:* ]] && use_all_null=1
+        [[ ${srcdst[1]} = [gnpcNEO]#E[gnpcNEO]#:* ]] && use_err_null=1
+        [[ ${srcdst[1]} = [gnpcNEO]#O[gnpcNEO]#:* ]] && use_out_null=1
+        srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
 
-            srcdst=( ${(@s.->.)sbin} )
-            srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-            [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1
-            [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1
-            [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1
-            [[ ${srcdst[1]} = [gnpcNEO]#c[gnpcNEO]#:* ]] && set_cwd=1
-            [[ ${srcdst[1]} = [gnpcNEO]#N[gnpcNEO]#:* ]] && use_all_null=1
-            [[ ${srcdst[1]} = [gnpcNEO]#E[gnpcNEO]#:* ]] && use_err_null=1
-            [[ ${srcdst[1]} = [gnpcNEO]#O[gnpcNEO]#:* ]] && use_out_null=1
-            srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
+        # Substitute the standard keywords and param''-s
+        @zinit-substitute 'srcdst[1]' 'srcdst[2]'
 
-            # Substitute the standard keywords and param''-s
-            @zinit-substitute 'srcdst[1]' 'srcdst[2]'
+        local -a fnames
+        local fname
+        eval "fnames=( ${srcdst[1]}(Nnon-.) )"
 
-            local -a fnames
-            local fname
-            eval "fnames=( ${srcdst[1]}(Nnon-.) )"
-
-            if (( !${#fnames} )) {
-                print -P -- "%F{38}bin-gem-node annex: %F{160}Warning: %F{154}The sbin'' ice (\`%F{219}$sbin%F{154}') didn't match any files%f"
-                continue
-            }
-
-            for fname ( $fnames ) {
-                srcdst[1]="$fname"
-
-                local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}" \
-                    fnam="${srcdst[2]:-${srcdst[1]:t}}"
-                local file="$ZPFX/bin/$fnam"
-
-                if [[ $OSTYPE == cygwin ]]; then
-                    .za-bgn-bin-or-src-function-body-cygwin 0 \
-                                "$fnam" \
-                                "$target_binary" "$dir" "$set_gem_home" \
-                                "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
-                                "$use_err_null" "$use_out_null"
-                        builtin print -r -- "$REPLY" \
-                            >! "$file.cmd"
-                        command chmod +x "$file.cmd"
-                fi
-                
-                .za-bgn-bin-or-src-function-body 0 \
-                            "$fnam" \
-                            "$target_binary" "$dir" "$set_gem_home" \
-                            "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
-                            "$use_err_null" "$use_out_null"
-
-                builtin print -r -- "#!/usr/bin/env zsh$nl$nl$REPLY$nl$nl$fnam \"\$@\"" \
-                    >! "$file"
-                command chmod +x "$file" "$target_binary"
-
-                if [[ -x $file ]]; then
-                    (( !OPTS[opt_-q,--quiet] )) && \
-                        if [[ -x $target_binary ]]; then
-                            if [[ $hook == atclone-<-> || $ZINIT[annex-multi-flag:pull-active] -ge  2 ]] {
-                                print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim and set +x on the %F{219}${target_binary:t}%F{154} binary%f"
-                            }
-                        else
-                            print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim %F{160}however the %F{219}${target_binary:t}%F{160} binary does not exist or failed to set +x on it%f"
-                        fi
-                else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong creating the %F{219}$fnam%F{160} shim%f"
-                fi
-            }
+        if (( !${#fnames} )) {
+          print -P -- "%F{38}bin-gem-node annex: %F{160}Warning: %F{154}The sbin'' ice (\`%F{219}$sbin%F{154}') didn't match any files%f"
+          continue
         }
-    )
-}
 
-if [[ -n "${ICE[fbin]}" ]] {
+        for fname ( $fnames ) {
+          srcdst[1]="$fname"
+
+          local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}" \
+            fnam="${srcdst[2]:-${srcdst[1]:t}}"
+          local file="$ZPFX/bin/$fnam"
+
+          if [[ $OSTYPE == cygwin ]]; then
+            .za-bgn-bin-or-src-function-body-cygwin 0 \
+              "$fnam" \
+              "$target_binary" "$dir" "$set_gem_home" \
+              "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
+              "$use_err_null" "$use_out_null"
+            builtin print -r -- "$REPLY" >! "$file.cmd"
+            command chmod +x "$file.cmd"
+          fi
+
+          .za-bgn-bin-or-src-function-body 0 \
+            "$fnam" \
+            "$target_binary" "$dir" "$set_gem_home" \
+            "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
+            "$use_err_null" "$use_out_null"
+
+          builtin print -r -- "#!/usr/bin/env zsh$nl$nl$REPLY$nl$nl$fnam \"\$@\"" >! "$file"
+          command chmod +x "$file" "$target_binary"
+
+          if [[ -x $file ]]; then
+            (( !OPTS[opt_-q,--quiet] )) && \
+              if [[ -x $target_binary ]]; then
+              if [[ $hook == atclone-<-> || $ZINIT[annex-multi-flag:pull-active] -ge  2 ]]; then
+                print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim and set +x on the %F{219}${target_binary:t}%F{154} binary%f"
+              fi
+            else
+              print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim %F{160}however the %F{219}${target_binary:t}%F{160} binary does not exist or failed to set +x on it%f"
+            fi
+          else
+            print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong creating the %F{219}$fnam%F{160} shim%f"
+          fi
+        }
+      }
+    )
+  }
+
+  if [[ -n "${ICE[fbin]}" ]] {
     local -a fbins srcdst
     fbins=( "${(s.;.)ICE[fbin]}" )
-
     local fbin
 
     for fbin ( $fbins ) {
-        srcdst=( ${(@s.->.)fbin} )
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-        srcdst[1]=${srcdst[1]#[a-zA-Z]##:}
-
-        # Substitute the standard keywords and param''-s
-        @zinit-substitute 'srcdst[1]'
-
-        local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}" \
-
+      srcdst=( ${(@s.->.)fbin} )
+      srcdst=( "${srcdst[@]//( (#s)[[:space:]]##|[[:space:]]##(#e) )/}" )
+      srcdst[1]=${srcdst[1]#[a-zA-Z]##:}
+      # Substitute the standard keywords and param''-s
+      @zinit-substitute 'srcdst[1]'
+      local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}" \
         command chmod +x "$target_binary"
 
-        if [[ -x $target_binary ]]; then
-            (( !OPTS[opt_-q,--quiet] )) && \
-                print -P -- "%F{38}bin-gem-node annex: %F{154}Set +x on the %F{219}${target_binary:t}%F{154} binary%f"
-        else
-            print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong setting +x on the %F{219}${target_binary:t}%F{160} binary%f"
-        fi
+      if [[ -x $target_binary ]]; then
+        (( !OPTS[opt_-q,--quiet] )) && \
+          print -P -- "%F{38}bin-gem-node annex: %F{154}Set +x on the %F{219}${target_binary:t}%F{154} binary%f"
+      else
+        print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong setting +x on the %F{219}${target_binary:t}%F{160} binary%f"
+      fi
     }
+  }
 }
-
-}
-
-# vim:ft=zsh:sw=4:sts=4:et
