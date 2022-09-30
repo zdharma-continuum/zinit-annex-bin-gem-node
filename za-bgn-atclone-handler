@@ -221,7 +221,7 @@ if (( ${+ICE[sbin]} )) {
                             >! "$file.cmd"
                         command chmod +x "$file.cmd"
                 fi
-                
+
                 .za-bgn-bin-or-src-function-body 0 \
                             "$fnam" \
                             "$target_binary" "$dir" "$set_gem_home" \
@@ -230,6 +230,16 @@ if (( ${+ICE[sbin]} )) {
 
                 builtin print -r -- "#!/usr/bin/env zsh$nl$nl$REPLY$nl$nl$fnam \"\$@\"" \
                     >! "$file"
+                if [[ "$PREFIX" =~ com.termux ]] && \
+                   (( $+commands[termux-fix-shebang] )); then
+                    if file -b --mime-type "$target_binary" | grep -q "application"; then
+                        print -P -- "%F{38}bin-gem-node annex: %F{154}Running %F{219}termux-fix-shebang%F{154} against the %F{219}${fnam}%F{154} shim%f"
+                        termux-fix-shebang "$file"
+                    else
+                        print -P -- "%F{38}bin-gem-node annex: %F{154}Running %F{219}termux-fix-shebang%F{154} against the %F{219}${fnam}%F{154} shim and the binary%f"
+                        termux-fix-shebang "$file" "$target_binary"
+                    fi
+                fi
                 command chmod +x "$file" "$target_binary"
 
                 if [[ -x $file ]]; then
