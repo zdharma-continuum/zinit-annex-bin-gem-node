@@ -1,7 +1,9 @@
-# Copyright (c) 2019-2020 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+#
+# Original work Copyright (c) 2019-2020 Sebastian Gniazdowski
+# Modified work Copyright (c) 2022 zdharma-continuum and contributors
 
-za-bgn-atclone-handler() {
+za-bgn::atclone-handler() {
 
 emulate -RL zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -212,7 +214,7 @@ if (( ${+ICE[sbin]} )) {
                 local file="$ZPFX/bin/$fnam"
 
                 if [[ $OSTYPE == cygwin ]]; then
-                    .za-bgn-bin-or-src-function-body-cygwin 0 \
+                    :za-bgn::bin-or-src-function-body-cygwin 0 \
                                 "$fnam" \
                                 "$target_binary" "$dir" "$set_gem_home" \
                                 "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
@@ -222,7 +224,7 @@ if (( ${+ICE[sbin]} )) {
                         command chmod +x "$file.cmd"
                 fi
                 
-                .za-bgn-bin-or-src-function-body 0 \
+                :za-bgn::bin-or-src-function-body 0 \
                             "$fnam" \
                             "$target_binary" "$dir" "$set_gem_home" \
                             "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
@@ -278,4 +280,4 @@ if [[ -n "${ICE[fbin]}" ]] {
 
 }
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:

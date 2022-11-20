@@ -1,7 +1,9 @@
-# Copyright (c) 2019 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
 #
-# FUNCTION: .za-bgn-bin-or-src-function-body
+# Original work Copyright (c) 2019-2020 Sebastian Gniazdowski
+# Modified work Copyright (c) 2022 zdharma-continuum and contributors
+#
+# FUNCTION: :za-bgn::bin-or-src-function-body
 # Returns the body of the function wrapping a binary
 
 local name="$2" bin="$3" dir="${4#%}"
@@ -41,4 +43,4 @@ REPLY+="$nl"
 REPLY+="${${(M)set_cwd:#1}:+"${nl}cd %oldpwd%"
 }"
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:

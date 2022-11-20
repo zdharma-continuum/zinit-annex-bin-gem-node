@@ -1,5 +1,7 @@
-# Copyright (c) 2019-2020 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
+#
+# Original work Copyright (c) 2019-2020 Sebastian Gniazdowski
+# Modified work Copyright (c) 2022 zdharma-continuum and contributors
 
 emulate -RL zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -79,4 +81,4 @@ if (( ${+ICE[sbin]} )) {
     )
 }
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:

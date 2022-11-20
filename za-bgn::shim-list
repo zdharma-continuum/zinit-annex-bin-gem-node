@@ -1,14 +1,14 @@
-# -*- mode: sh; sh-indentation: 4; sh-basic-offset: 4; indent-tabs-mode: nil;  -*-
-
-# Copyright 2020 Sebastian Gniazdowski
-# License: MIT
+#!/usr/bin/env zsh
+#
+# Original work Copyright (c) 2019-2020 Sebastian Gniazdowski
+# Modified work Copyright (c) 2022 zdharma-continuum and contributors
 
 # Synopsis:
 #   zinit shim-list [-t|--this-dir] [-c|--cat] [-i|--from-ices] \
 #		    [-o|--one-line] [-s|--short]
 #
 
-za-bgn-shim-list() {
+za-bgn::shim-list() {
 
 emulate -LR zsh
 setopt extended_glob warn_create_global typeset_silent \
@@ -149,4 +149,4 @@ END
     }
 }
 
-# vim:ft=zsh:sw=4:sts=4:noet:
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:

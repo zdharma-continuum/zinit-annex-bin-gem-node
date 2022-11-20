@@ -1,14 +1,15 @@
-# Copyright (c) 2019 Sebastian Gniazdowski
-# License MIT
+#!/usr/bin/env zsh
 #
-# Returns the body of the function wrapping a function
+# Original work Copyright (c) 2019-2020 Sebastian Gniazdowski
+# Modified work Copyright (c) 2022 zdharma-continuum and contributors
 
+# Returns the body of the function wrapping a function
 local name="$1" target_func="$2" dir="${3#%}"
 integer set_gem_home="$4" set_node_path="$5" set_virtualenv="$6" set_cwd="$7" \
         use_all_null="$8" use_err_null="$9" use_out_null="$10"
 
 if [[ "$name" = "$target_func" ]]; then
-    target_func="${target_func}--za-bgn-orig"
+    target_func="${target_func}--za-bgn::orig"
     functions[$target_func]="${functions[$name]}"
 fi
 
@@ -28,4 +29,4 @@ REPLY+="$nl"
 REPLY+="${${(M)set_cwd:#1}:+"() { setopt localoptions noautopushd; builtin cd -q \"\$oldpwd\"; }"}
 }"
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:
