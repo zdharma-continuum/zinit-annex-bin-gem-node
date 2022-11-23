@@ -184,7 +184,6 @@ if (( ${+ICE[sbin]} )) {
                 fi
             fi
 
-            # Allow multiple separators, =>,->,→
             srcdst=( ${(@s.=>.)${(@s.→.)${(@s.->.)sbin}}} )
             srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
             [[ ${srcdst[1]} = [1gnpcNEO]#g[1gnpcNEO]#:* ]] && set_gem_home=1
