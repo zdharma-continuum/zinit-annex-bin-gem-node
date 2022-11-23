@@ -158,18 +158,22 @@ if (( ${+ICE[sbin]} )) {
 
         for sbin ( $sbins "" ) {
             integer set_gem_home=0 set_node_path=0 set_virtualenv=0 set_cwd=0 \
-                    use_all_null=0 use_err_null=0 use_out_null=0
+                    use_all_null=0 use_err_null=0 use_out_null=0 use_1=0
 
-            if [[ -z $sbin && ${#sbins} -eq 0 ]] {
+            if [[ -z $sbin ]]; then
                 if [[ -f $dir/${id_as:t} ]]; then
                     sbin="$dir/${id_as:t}"
                 elif [[ -n $plugin && -f $dir/$plugin ]]; then
                     sbin="$dir/$plugin"
                 elif [[ -n $url && -f $dir/${url:t} ]]; then
                     sbin="$dir/${url:t}"
+                # Search in tree.
+                elif [[ -f $dir/**/($id_as:t|$plugin)(#qN[1].) ]]; then
+                    sbin=( $dir/**/($id_as:t|$plugin)(Nnon.) )
+                    sbin=$sbin[1]
                 else
                     local -a files
-                    files=( $dir/*(*Nnon:t) )
+                    files=( $dir/**/*(*Nnon:t) )
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
@@ -177,28 +181,31 @@ if (( ${+ICE[sbin]} )) {
                         break
                     fi
                 fi
-            } elif [[ -z $sbin ]] {
-                continue
-            }
+            fi
 
-            srcdst=( ${(@s.->.)sbin} )
+            srcdst=( ${(@s.=>.)${(@s.→.)${(@s.->.)sbin}}} )
             srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-            [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1
-            [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1
-            [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1
-            [[ ${srcdst[1]} = [gnpcNEO]#c[gnpcNEO]#:* ]] && set_cwd=1
-            [[ ${srcdst[1]} = [gnpcNEO]#N[gnpcNEO]#:* ]] && use_all_null=1
-            [[ ${srcdst[1]} = [gnpcNEO]#E[gnpcNEO]#:* ]] && use_err_null=1
-            [[ ${srcdst[1]} = [gnpcNEO]#O[gnpcNEO]#:* ]] && use_out_null=1
-            srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
+            [[ ${srcdst[1]} = [1gnpcNEO]#g[1gnpcNEO]#:* ]] && set_gem_home=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#n[1gnpcNEO]#:* ]] && set_node_path=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#p[1gnpcNEO]#:* ]] && set_virtualenv=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#c[1gnpcNEO]#:* ]] && set_cwd=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#N[1gnpcNEO]#:* ]] && use_all_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#E[1gnpcNEO]#:* ]] && use_err_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#O[1gnpcNEO]#:* ]] && use_out_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#1[1gnpcNEO]#:* ]] && use_1=1
+            srcdst[1]=${srcdst[1]#[a-zA-Z0-9]#:}
 
             # Substitute the standard keywords and param''-s
             @zinit-substitute 'srcdst[1]' 'srcdst[2]'
 
             local -a fnames
             local fname
-            eval "fnames=( ${srcdst[1]}(Nnon-.) )"
-
+            if [[ $srcdst[1] != /* ]]; then
+                # Search tree and sort from ./
+                eval "fnames=( **/${srcdst[1]}(Nnon-.) )"
+            else
+                eval "fnames=( ${srcdst[1]}(Nnon-.) )"
+            fi
             if (( !${#fnames} )) {
                 print -P -- "%F{38}bin-gem-node annex: %F{160}Warning: %F{154}The sbin'' ice (\`%F{219}$sbin%F{154}') didn't match any files%f"
                 continue
@@ -243,6 +250,14 @@ if (( ${+ICE[sbin]} )) {
                         fi
                 else
                     print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong creating the %F{219}$fnam%F{160} shim%f"
+                fi
+                if ((use_1)); then
+                    (($#fnames-1)) && \
+                        +zinit-message {pre}bin-gem-node annex: {warn}Skipped \
+                            {num}$(($#fnames-1)){warn} files that match the \
+                            {ice}sbin\'\'{warn} ice \({obj}${(j:, :)fnames[2,8]}\
+${${$(($#fnames>8)):#0}:+,{b}{note}$(($#fnames-8)) more\{…\}}{warn}\), because of {flag}1:…{warn} flag given
+                    break
                 fi
             }
         }
