@@ -133,7 +133,7 @@ END
 		local -a sbins
 		sbins=( ${(s.;.)ices[sbin]} )
 		if (( ${#sbins} )) {
-		    .zinit-any-colorify-as-uspl2 "$p"
+		    _zi::-any-colorify-as-uspl2 "$p"
 		}
 		for sbin ( $sbins ) {
 		    print "${(r:50:: :)sbin} $REPLY"
