@@ -53,7 +53,7 @@ if (( ${+ICE[sbin]} )) {
             srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
 
             # Substitute the standard keywords and param''-s
-            @zinit-substitute 'srcdst[1]' 'srcdst[2]'
+            @zi::substitute 'srcdst[1]' 'srcdst[2]'
 
             local -a fnames
             local fname
