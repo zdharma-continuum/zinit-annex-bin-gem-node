@@ -60,7 +60,7 @@ END
     return 0
 }
 
-(( !${+functions[.zinit-any-colorify-as-uspl2]} )) && \
+(( !${+functions[zi::any-colorify-as-uspl2]} )) && \
     builtin source $ZINIT[BIN_DIR]/zinit-side.zsh
 
 # To `cat`… or `pr`…:
@@ -113,8 +113,8 @@ END
 			}
 			print -r "$ZINIT[col-obj]$url$ZINIT[col-rst]"
 		    } else {
-			(( ${+functions[.zinit-first]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
-			.zinit-any-colorify-as-uspl2 "$id_as"
+			(( ${+functions[zi::first]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
+			zi::any-colorify-as-uspl2 "$id_as"
 			print -r -- "$REPLY"
 		    }
 		}
@@ -123,7 +123,7 @@ END
 	(( ${#opt_one_line} )) && print
 
     } else {
-	+zinit-message '[msg2]Listing shims basing on the in-memory ices data...[rst]'
+	+zi::message '[msg2]Listing shims basing on the in-memory ices data...[rst]'
 	local p
 	local -A ices
 	for p ( $ZINIT_REGISTERED_PLUGINS ) {
@@ -133,7 +133,7 @@ END
 		local -a sbins
 		sbins=( ${(s.;.)ices[sbin]} )
 		if (( ${#sbins} )) {
-		    .zinit-any-colorify-as-uspl2 "$p"
+		    zi::any-colorify-as-uspl2 "$p"
 		}
 		for sbin ( $sbins ) {
 		    print "${(r:50:: :)sbin} $REPLY"
