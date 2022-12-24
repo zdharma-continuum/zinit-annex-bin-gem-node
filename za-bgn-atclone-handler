@@ -42,7 +42,7 @@ if [[ -n "${ICE[gem]}" ]] {
             command gem install -q --no-user-install -i "$dir" "${gems[@]}"
         elif [[ $hook = *atpull-<-> ]]; then
             if (( !OPTS[opt_-q,--quiet] )) {
-                print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the gems...%f"
+                m {pre}bin-gem-node annex: {msg2}Updating the gems...
                 command gem update -q --no-user-install -i "$dir" "${gems[@]}"
             } else {
                 command gem update -q --no-user-install -i "$dir" "${gems[@]}" &> /dev/null
@@ -88,7 +88,7 @@ if [[ -n "${ICE[pip]}" ]] {
         (
             builtin cd -q "$dir" && {
                 if (( !OPTS[opt_-q,--quiet] )) {
-                    print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the pip packages...%f"
+                    m {pre}bin-gem-node annex: {msg2}Updating the pip packages...
                     VIRTUALENV=venv(:A) command venv/bin/pip install --upgrade "${umods[@]}"
                 } else {
                     VIRTUALENV=venv(:A) command venv/bin/pip install -q --upgrade "${umods[@]}"
@@ -133,7 +133,7 @@ if [[ -n "${ICE[node]}" ]] {
         (
             builtin cd -q "$dir" && {
                 if (( !OPTS[opt_-q,--quiet] )) {
-                    print -P -- "%F{38}bin-gem-node annex: %F{154}Updating the node modules...%f"
+                    m {pre}bin-gem-node annex: {msg2}Updating the node modules...
                     command npm --silent update
                 } else {
                     command npm --silent update &> /dev/null
@@ -178,7 +178,7 @@ if (( ${+ICE[sbin]} )) {
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
+                        m {pre}bin-gem-node annex: {error}The automatic-empty sbin ice didn\'t find any executable files
                         break
                     fi
                 fi
@@ -208,7 +208,8 @@ if (( ${+ICE[sbin]} )) {
                 eval "fnames=( ${srcdst[1]}(Nnon-.) )"
             fi
             if (( !${#fnames} )) {
-                print -P -- "%F{38}bin-gem-node annex: %F{160}Warning: %F{154}The sbin'' ice (\`%F{219}$sbin%F{154}') didn't match any files%f"
+                m {pre}bin-gem-node annex: {error}Warning: {msg2}The sbin\'\' \
+                    ice \(\`{ice}$sbin{msg2}'\) didn\'t match any files
                 continue
             }
 
@@ -230,7 +231,7 @@ if (( ${+ICE[sbin]} )) {
                         command chmod +x "$file.cmd"
                         continue
                 fi
-                
+
                 .za-bgn-bin-or-src-function-body 0 \
                             "$fnam" \
                             "$target_binary" "$dir" "$set_gem_home" \
@@ -245,13 +246,13 @@ if (( ${+ICE[sbin]} )) {
                     (( !OPTS[opt_-q,--quiet] )) && \
                         if [[ -x $target_binary ]]; then
                             if [[ $hook == atclone-<-> || $ZINIT[annex-multi-flag:pull-active] -ge  2 ]] {
-                                print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim and set +x on the %F{219}${target_binary:t}%F{154} binary%f"
+                                m {pre}bin-gem-node annex: {msg2}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the {cmd}$fnam{msg2} shim and set +x on the {cmd}${target_binary:t}{msg2} binary
                             }
                         else
-                            print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim %F{160}however the %F{219}${target_binary:t}%F{160} binary does not exist or failed to set +x on it%f"
+                            m {pre}bin-gem-node annex: {msg2}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the {cmd}$fnam{msg2} shim {error}however the {cmd}${target_binary:t}{error} binary does not exist or failed to set +x on it
                         fi
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong creating the %F{219}$fnam%F{160} shim%f"
+                    m {pre}bin-gem-node annex: {error}Something went wrong creating the {cmd}$fnam{error} shim
                 fi
                 if ((use_1)); then
                     (($#fnames-1)) && \
@@ -286,9 +287,9 @@ if [[ -n "${ICE[fbin]}" ]] {
 
         if [[ -x $target_binary ]]; then
             (( !OPTS[opt_-q,--quiet] )) && \
-                print -P -- "%F{38}bin-gem-node annex: %F{154}Set +x on the %F{219}${target_binary:t}%F{154} binary%f"
+                m {pre}bin-gem-node annex: {msg2}Set +x on the {cmd}${target_binary:t}{msg2} binary
         else
-            print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong setting +x on the %F{219}${target_binary:t}%F{160} binary%f"
+            m {pre}bin-gem-node annex: {error}Something went wrong setting +x on the {cmd}${target_binary:t}{error} binary
         fi
     }
 }
