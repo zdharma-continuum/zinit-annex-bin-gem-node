@@ -1,3 +1,4 @@
+# -*- mode: sh; sh-indentation: 4; sh-basic-offset: 4; indent-tabs-mode: nil;  -*-
 # Copyright (c) 2019-2020 Sebastian Gniazdowski
 # License MIT
 
@@ -44,3 +45,4 @@ za-bgn-null-handler() { :; }
     za-bgn-atdelete-handler \
     za-bgn-null-handler
 
+# vim:ft=zsh:sw=4:sts=4:noet:
