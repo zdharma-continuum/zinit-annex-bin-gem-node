@@ -150,7 +150,9 @@ if (( ${+ICE[fbin]}${+ICE[fsrc]}${+ICE[ferc]} > 0 )) {
                 if (( ${#files} )); then
                     fbin="${files[1]}"
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty fbin ice didn't find any executable files for %F{219}$id_as%f"
+                    +zi-log {pre}bin-gem-node annex: {error}The automatic-empty \
+                        {ice}fbin{error} ice didn\'t find any executable \
+                            files for {id-as}$id_as
                     break
                 fi
             fi
