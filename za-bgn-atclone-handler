@@ -150,13 +150,14 @@ if (( ${+ICE[sbin]} )) {
     local -a sbins srcdst
     sbins=( ${(s.;.)ICE[sbin]} )
 
+    (( !$#sbins )) && sbins+=("")
     local sbin
 
     (
         # CD for the globbing through eval
         builtin cd -q "$dir" || return
 
-        for sbin ( $sbins "" ) {
+        for sbin ( $sbins  ) {
             integer set_gem_home=0 set_node_path=0 set_virtualenv=0 set_cwd=0 \
                     use_all_null=0 use_err_null=0 use_out_null=0
 
@@ -220,6 +221,7 @@ if (( ${+ICE[sbin]} )) {
                         builtin print -r -- "$REPLY" \
                             >! "$file.cmd"
                         command chmod +x "$file.cmd"
+                        continue
                 fi
                 
                 .za-bgn-bin-or-src-function-body 0 \
