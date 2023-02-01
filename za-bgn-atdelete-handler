@@ -1,8 +1,12 @@
 # Copyright (c) 2019-2020 Sebastian Gniazdowski
 # License MIT
 
+za-bgn-atdelete-handler() {
+
 emulate -RL zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops
+setopt extendedglob warncreateglobal typesetsilent noshortloops nopromptsubst
+
+0=${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}
 
 [[ "$1" = plugin ]] && \
     local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" hook="$6" || \
@@ -79,4 +83,5 @@ if (( ${+ICE[sbin]} )) {
     )
 }
 
+}
 # vim:ft=zsh:sw=4:sts=4:et

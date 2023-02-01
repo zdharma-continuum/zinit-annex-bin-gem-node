@@ -4,7 +4,9 @@
 za-bgn-atload-handler() {
 
 emulate -RL zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops
+setopt extendedglob warncreateglobal typesetsilent noshortloops nopromptsubst
+
+0=${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}
 
 if [[ "$1" = plugin ]] {
     local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
