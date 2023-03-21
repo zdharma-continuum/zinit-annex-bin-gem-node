@@ -308,9 +308,9 @@ has been used.
 ---
 
 ## 4. **`pip'{pip-package}; …'`**
-## &nbsp;&nbsp;&nbsp; **`node'[{path-to-binary} <-] !{pip-package} [-> {name-of-the-function}]; …'`**
+## &nbsp;&nbsp;&nbsp; **`pip'[{path-to-binary} <-] !{pip-package} [-> {name-of-the-function}]; …'`**
 
-Installs the node module of name `{pip-package}` inside the plugin's or
+Installs the pip package of name `{pip-package}` inside the plugin's or
 snippet's directory.
 
 In the second form it also creates a wrapper function identical to the one
@@ -335,7 +335,7 @@ ansible () {
 }
 ```
 
-In this case the name of the binary program provided by the node module is
+In this case the name of the binary program provided by the pip package is
 different from its name, hence the second form with the `b <- a -> c` syntax
 has been used.
 
