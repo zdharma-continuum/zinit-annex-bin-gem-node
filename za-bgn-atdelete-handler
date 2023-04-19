@@ -1,8 +1,12 @@
 # Copyright (c) 2019-2020 Sebastian Gniazdowski
 # License MIT
 
+za-bgn-atdelete-handler() {
+
 emulate -RL zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops
+setopt extendedglob warncreateglobal typesetsilent noshortloops nopromptsubst
+
+0=${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}
 
 [[ "$1" = plugin ]] && \
     local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" hook="$6" || \
@@ -37,7 +41,7 @@ if (( ${+ICE[sbin]} )) {
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
+                        m {pre}bin-gem-node annex: {error}The automatic-empty sbin ice didn\'t find any executable files
                         break
                     fi
                 fi
@@ -67,16 +71,17 @@ if (( ${+ICE[sbin]} )) {
                 if [[ -f $file ]]; then
                     command rm -f "$file"
                     if [[ -f $file ]]; then
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}Couldn't remove the %F{220}$fnam%F{160} shim from \$ZPFX/bin (no write access to \$ZPFX/bin?)%f"
+                        m {pre}bin-gem-node annex: {error}Couldn\'t remove the {cmd}$fnam{error} shim from {dir}\$ZPFX/bin{error} \(no write access to {dir}\$ZPFX/bin{error}?\)
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{154}Correctly removed the %F{220}$fnam%F{154} shim from \$ZPFX/bin%f" || \
+                        m {pre}bin-gem-node annex: {msg2}Correctly removed the {cmd}$fnam{msg2} shim from {dir}\$ZPFX/bin 
                     fi
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}The %F{220}$fnam%F{160} shim didn't exist in \$ZPFX/bin (or isn't a regular file)%f"
+                    m {pre}bin-gem-node annex: {error}The {cmd}$fnam{error} shim didn\'t exist in {dir}\$ZPFX/bin{error} (or isn\'t a regular file) 
                 fi
             }
         }
     )
 }
 
+}
 # vim:ft=zsh:sw=4:sts=4:et
