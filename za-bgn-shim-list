@@ -11,12 +11,10 @@
 za-bgn-shim-list() {
 
 emulate -LR zsh
-setopt extendedglob warncreateglobal typesetsilent \
-        noshortloops rcquotes nopromptsubst
+setopt extended_glob warn_create_global typeset_silent \
+        no_short_loops rc_quotes
 
-0=${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}
-
-autoload -Uz is-at-least
+autoload is-at-least
 local is_58
 is-at-least 5.8 && is_58=1
 
