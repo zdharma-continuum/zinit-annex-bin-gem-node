@@ -261,20 +261,29 @@ In the second form it also creates a wrapper function identical to the one creat
 #### Example<a name="example-2"></a>
 
 ```zsh
-% zinit delete zdharma-continuum/null
-Delete /home/sg/.zinit/plugins/zdharma---null?
-[yY/n…]
-y
-Done (action executed, exit code: 0)
-% zinit ice node'remark <- !remark-cli -> remark; remark-man'
-% zinit load zdharma-continuum/null
-…installation messages…
-% which remark
+zi for \
+    as'null' \
+    id-as'remark' \
+    node'remark <- !remark-cli -> remark; remark-man' \
+  @zdharma-continuum/null
+```
+
+Verify:
+
+```console
+$ type remark
+remark is a shell function
+
+$ which remark
 remark () {
-        local bindir="/home/sg/.zinit/plugins/zdharma---null/node_modules/.bin"
-        local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
+        local bindir="/Users/e109082/.local/share/zinit/plugins/remark/node_modules/.bin"
+        local -x NODE_PATH="/Users/e109082/.local/share/zinit/plugins/remark"/node_modules
+        local -xU PATH="/Users/e109082/.local/share/zinit/plugins/remark"/node_modules/.bin:"$bindir":"$PATH"
         "$bindir"/"remark" "$@"
 }
+
+$ remark --version
+remark: 14.0.3, remark-cli: 11.0.0
 ```
 
 In this case, the name of the binary program provided by the node module is different from its name, hence the second
