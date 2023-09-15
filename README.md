@@ -1,35 +1,35 @@
-# zinit-annex-bin-gem-node
+# zinit-annex-bin-gem-node<a name="zinit-annex-bin-gem-node"></a>
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- mdformat-toc start --slug=github --maxlevel=6 --minlevel=1 -->
 
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-**Table of Contents** *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [zinit-annex-bin-gem-node](#z-a-bin-gem-node)
-  - [Introduction](#introduction)
+- [zinit-annex-bin-gem-node](#zinit-annex-bin-gem-node)
   - [Installation](#installation)
-  - [How it works – bird's-eye view](#how-it-works--birds-eye-view)
-  - [How it works, in detail](#how-it-works-in-detail)
-  - [The Ice Modifiers Provided By The Annex](#the-ice-modifiers-provided-by-the-annex)
-  - [1. **`fbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-function}]; …'`**](#1-fbingncneopath-to-binary---name-of-the-function-)
-  - [2. **`gem'{gem-name}; …'`**](#2-gemgem-name-)
-  - [    **`gem'[{path-to-binary} <-] !{gem-name} [-> {name-of-the-function}]; …'`**](#nbspnbspnbsp-gempath-to-binary---gem-name---name-of-the-function-)
-  - [3. **`node'{node-module}; …'`**](#3-nodenode-module-)
-  - [    **`node'[{path-to-binary} <-] !{node-module} [-> {name-of-the-function}]; …'`**](#nbspnbspnbsp-nodepath-to-binary---node-module---name-of-the-function-)
-  - [4. **`pip'{pip-package}; …'`**](#3-pippip-package-)
-  - [    **`pip'[{path-to-binary} <-] !{pip-package} [-> {name-of-the-function}]; …'`**](#nbspnbspnbsp-pippath-to-binary---pip-package---name-of-the-function-)
-  - [5. **`fmod'[{g|n|c|N|E|O}:]{function-name}; …'`**](#4-fmodgncneofunction-name-)
-  - [    **`fmod'[{g|n|c|N|E|O}:]{function-name} -> {wrapping-function-name}; …'`**](#nbspnbspnbsp-fmodgncneofunction-name---wrapping-function-name-)
-  - [6. **`sbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-script}]; …'`**](#5-sbingncneopath-to-binary---name-of-the-script-)
-  - [7. **`fsrc'[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …'`**](#6-fsrcgncneopath-to-script---name-of-the-function-)
-  - [8. **`ferc'[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …'`**](#7-fercgncneopath-to-script---name-of-the-function-)
-- [Additional Zinit commands](#additional-zinit-commands)
-- [Cygwin support](#cygwin-support)
+  - [How it works](#how-it-works)
+    - [Ices](#ices)
+  - [sbin](#sbin)
+    - [Usage](#usage)
+    - [Example](#example)
+  - [fbin](#fbin)
+    - [Example:](#example)
+  - [gem](#gem)
+    - [Usage](#usage-1)
+  - [Example](#example-1)
+  - [node](#node)
+    - [Usage](#usage-2)
+    - [Example](#example-2)
+  - [pip](#pip)
+    - [Usage](#usage-3)
+    - [Example](#example-3)
+  - [fmod](#fmod)
+    - [Usage](#usage-4)
+    - [Example](#example-4)
+  - [fsrc](#fsrc)
+    - [Usage](#usage-5)
+    - [Example](#example-5)
+  - [Additional Zinit commands](#additional-zinit-commands)
+  - [Cygwin Support](#cygwin-support)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Introduction
+<!-- mdformat-toc end -->
 
 A Zsh-Zinit annex (i.e. an extension) that provides functionality, which allows to:
 
@@ -49,7 +49,7 @@ A Zsh-Zinit annex (i.e. an extension) that provides functionality, which allows 
    mechanism),
 1. Automatic updates of Ruby gems and Node modules during regular plugin and snippet updates with `zinit update …`.
 
-## Installation
+## Installation<a name="installation"></a>
 
 Simply load like a regular plugin, i.e.:
 
@@ -59,7 +59,7 @@ zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
 After executing this command you can then use the new ice-mods provided by the annex.
 
-## How it works – bird's-eye view
+## How it works<a name="how-it-works"></a>
 
 **Note:** the README is somewhat outdated – the `sbin''` ice that creates forwarder-scripts instead of
 forwarder-functions (created by the `fbin''` ice and elaborated in this `How it works …` section) turned out to be the
@@ -83,8 +83,6 @@ Also, like already mentioned, instead of the function an automatically created s
 for the same purpose and with the same functionality, so that the command is being accessible practically fully normally
 – not only in the live Zsh session (only within which the functions created by `fbin''` exist), but also from any Zsh
 script.
-
-## How it works, in detail
 
 Suppose that you would want to install `junegunn/fzf-bin` plugin from GitHub Releases, which contains only single file –
 the `fzf` binary for the selected architecture. It is possible to do it in the standard way – by adding the plugin's
@@ -129,24 +127,28 @@ fzf "$@"
 Running the script will forward the call to the program accessed through an embedded path to it. Thus, no `$PATH`
 changes are needed!
 
-## The Ice Modifiers Provided By The Annex
+### Ices<a name="ices"></a>
 
 There are 7 ice-modifiers provided and handled by the annex. They are:
 
-1. `sbin''` – creates `shims` for binaries and scripts.
-1. `fbin''` – creates functions for binaries and scripts.
-1. `gem''` – installs and updates gems + creates functions for gems' binaries.
-1. `node''` – installs and updates node_modules + creates functions for binaries of the modules.
-1. `pip''` – installs and updates python packages into a virtualenv + creates functions for binaries of the packages.
-1. `fmod''` – creates wrapping functions for other functions.
-1. `fsrc''` – creates functions that source given scripts.
-1. `ferc''` – the same as `fsrc''`, but using an alternate script-loading method.
+| ice  | description                                                                                              |
+| ---- | -------------------------------------------------------------------------------------------------------- |
+| fbin | creates functions for binaries and scripts.                                                              |
+| ferc | the same as fsrc, but using an alternate script-loading method.                                          |
+| fmod | creates wrapping functions for other functions.                                                          |
+| fsrc | creates functions that source given scripts.                                                             |
+| gem  | installs and updates gems + creates functions for gems binaries.                                         |
+| node | installs and updates node_modules + creates functions for binaries of the modules.                       |
+| pip  | installs and updates python packages into a virtualenv + creates functions for binaries of the packages. |
+| sbin | creates shims for binaries and scripts.                                                                  |
 
-**The ice-modifiers in detail:**
+## sbin<a name="sbin"></a>
 
-______________________________________________________________________
+### Usage<a name="usage"></a>
 
-## 1. **`sbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-script}]; …'`**
+```zsh
+sbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-script}];' 
+```
 
 It creates the so called `shim` known from `rbenv` – a wrapper script that forwards the call to the actual binary. The
 script is created always under the same, standard and single `$PATH` entry: `$ZPFX/bin` (which is `~/.zinit/polaris/bin`
@@ -154,7 +156,7 @@ by default).
 
 The flags have the same meaning as with `fbin''` ice.
 
-Example:
+### Example<a name="example"></a>
 
 ```zsh
 % zinit delete junegunn/fzf-bin
@@ -185,9 +187,11 @@ fzf "$@"
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-______________________________________________________________________
+## fbin<a name="fbin"></a>
 
-## 2. **`fbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-function}]; …'`**
+```
+fbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-function}]; …' 
+```
 
 Creates a wrapper function of the name the same as the last segment of the path or as `{name-of-the-function}`. The
 optional preceding flags mean:
@@ -201,7 +205,7 @@ optional preceding flags mean:
 - `E` – append `2>/dev/null` to the call of the binary, i.e. redirect standard error to `/dev/null`,
 - `O` – append `>/dev/null` to the call of the binary, i.e. redirect standard output to `/dev/null`.
 
-Example:
+### Example:<a name="example"></a>
 
 ```zsh
 % zinit ice from"gh-r" fbin"g:fzf -> myfzf"
@@ -223,18 +227,24 @@ myfzf () {
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
 
-______________________________________________________________________
+## gem<a name="gem"></a>
 
-## 2. **`gem'{gem-name}; …'`**
+### Usage<a name="usage-1"></a>
 
-## **`gem'[{path-to-binary} <-] !{gem-name} [-> {name-of-the-function}]; …'`**
+```
+gem'{gem-name};' 
+```
+
+```
+gem"[{path-to-binary} <-] !{gem-name} [-> {name-of-the-function}]; …"
+```
 
 Installs the gem of name `{gem-name}` with `$GEM_HOME` set to the plugin's or snippet's directory. In other words, the
 gem and its dependencies will be installed locally in that directory.
 
 In the second form it also creates a wrapper function identical to the one created with `fbin''` ice.
 
-Example:
+## Example<a name="example-1"></a>
 
 ```zsh
 % zinit ice gem'!asciidoctor'
@@ -247,17 +257,21 @@ asciidoctor () {
 }
 ```
 
-______________________________________________________________________
+## node<a name="node"></a>
 
-## 3. **`node'{node-module}; …'`**
+### Usage<a name="usage-2"></a>
 
-## **`node'[{path-to-binary} <-] !{node-module} [-> {name-of-the-function}]; …'`**
+```
+node'{node-module}; …'
+```
+
+node'\[{path-to-binary} \<-\] !{node-module} \[-> {name-of-the-function}\];
 
 Installs the node module of name `{node-module}` inside the plugin's or snippet's directory.
 
 In the second form it also creates a wrapper function identical to the one created with `fbin''` ice.
 
-Example:
+### Example<a name="example-2"></a>
 
 ```zsh
 % zinit delete zdharma-continuum/null
@@ -279,85 +293,130 @@ remark () {
 In this case the name of the binary program provided by the node module is different from its name, hence the second
 form with the `b <- a -> c` syntax has been used.
 
-______________________________________________________________________
+## pip<a name="pip"></a>
 
-## 4. **`pip'{pip-package}; …'`**
+### Usage<a name="usage-3"></a>
 
-## **`pip'[{path-to-binary} <-] !{pip-package} [-> {name-of-the-function}]; …'`**
-
-Installs the pip package of name `{pip-package}` inside the plugin's or snippet's directory.
-
-In the second form it also creates a wrapper function identical to the one created with `fbin''` ice.
-
-Example:
+Install the Python package of name `{pip-package}` inside a plugin or snippet directory.
 
 ```zsh
-% zinit delete zdharma-continuum/null
-Delete /home/sg/.zinit/plugins/zdharma---null?
-[yY/n…]
-y
-Done (action executed, exit code: 0)
-% zinit ice node'ansible <- !ansible -> ansible; ansible-lint'
-% zinit load zdharma-continuum/null
-…installation messages…
-% which remark
+pip'{pip-package}`
+```
+
+Create a wrapper function identical to the one created with `fbin` ice.
+
+```zsh
+pip'[{path-to-binary} <-] !{pip-package} [-> {name-of-the-function}]'
+```
+
+### Example<a name="example-3"></a>
+
+```zsh
+zi for \
+    as'null' \
+    id-as'ansible' \
+    pip'ansible <- !ansible -> ansible; ansible-lint' \
+  @zdharma-continuum/null
+```
+
+Verify:
+
+```console
+$ type ansible
+ansible is a shell function
+
+$ which ansible
 ansible () {
-        local bindir="/home/sg/.zinit/plugins/zdharma---null/venv/bin"
-        local -x VIRTUALENV="/home/sg/.zinit/plugins/zdharma---null"/venv
+        local bindir="/Users/e109082/.local/share/zinit/plugins/ansible/venv/bin"
+        local -x VIRTUALENV="/Users/e109082/.local/share/zinit/plugins/ansible"/venv
+        local -xU PATH="/Users/e109082/.local/share/zinit/plugins/ansible"/venv/bin:"$bindir":"$PATH"
         "$bindir"/"ansible" "$@"
 }
+
+$ ansible --version
+ansible [core 2.15.4]
+  config file = None
+  configured module search path = ['/Users/e109082/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /Users/e109082/.local/share/zinit/plugins/ansible/venv/lib/python3.9/site-packages/ansible
+  ansible collection location = /Users/e109082/.ansible/collections:/usr/share/ansible/collections
+  executable location = /Users/e109082/.local/share/zinit/plugins/ansible/venv/bin/ansible
+  python version = 3.9.6 (default, Aug 12 2023, 04:13:21) [Clang 15.0.0 (clang-1500.0.40.1)] (/Users/e109082/.local/share/zinit/plugins/ansible/venv/bin/python3)
+  jinja version = 3.1.2
+  libyaml = True
 ```
 
 In this case the name of the binary program provided by the pip package is different from its name, hence the second
 form with the `b <- a -> c` syntax has been used.
 
-______________________________________________________________________
+## fmod<a name="fmod"></a>
 
-## 5. **`fmod'[{g|n|c|N|E|O}:]{function-name}; …'`**
+### Usage<a name="usage-4"></a>
 
-## **`fmod'[{g|n|c|N|E|O}:]{function-name} -> {wrapping-function-name}; …'`**
-
-It wraps given function with the ability to set `$GEM_HOME`, etc. – the meaning of the `g`,`n` and `c` flags is the same
-as in the `fbin''` ice.
-
-Example:
+The meaning of the `g`,`n` and `c` flags is the same as in the `fbin''` ice.
 
 ```zsh
-% myfun() { pwd; ls -1 }
-% zinit ice fmod'cgn:myfun'
-% zinit load zdharma-continuum/null
-% which myfun
-myfun () {
-        local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
-        local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
-        local oldpwd="/home/sg/.zinit/plugins/zinit---zinit-annex-bin-gem-node"
-        () {
-                setopt localoptions noautopushd
-                builtin cd -q "/home/sg/.zinit/plugins/zdharma---null"
-        }
-        "myfun--za-bgn-orig" "$@"
-        () {
-                setopt localoptions noautopushd
-                builtin cd -q "$oldpwd"
-        }
-}
-% myfun
-/home/sg/.zinit/plugins/zdharma---null
-LICENSE
-README.md
+fmod'[{g|n|c|N|E|O}:]{function-name}'
 ```
 
-______________________________________________________________________
+You can wrap the given function with the ability to set `$GEM_HOME`.
 
-## 7. **`fsrc'[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …'`**
+```
+fmod'[{g|n|c|N|E|O}:]{function-name} -> {wrapping-function-name}'
+```
 
-## 8. **`ferc'[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …'`**
+### Example<a name="example-4"></a>
+
+```zsh
+foobar(){ +zi-log -n '{m} foobar function -> '; pwd; }
+zi for \
+    as'null' \
+    fmod'cgn:foobar' \
+    id-as'fmod-demo' \
+  @zdharma-continuum/null
+```
+
+Verify:
+
+```console
+$ foobar
+==> foobar function -> /Users/e109082/.local/share/zinit/plugins/fmod-demo
+```
+
+```console
+$ which foobar
+foobar () {
+    local -x GEM_HOME="/Users/e109082/.local/share/zinit/plugins/fmod-demo"
+    local -x NODE_PATH="/Users/e109082/.local/share/zinit/plugins/fmod-demo"/node_modules
+    local oldpwd="/Users/e109082/.local/share/zinit/plugins/zdharma-continuum---zinit-annex-bin-gem-node"
+    () {
+        setopt localoptions noautopushd
+        builtin cd -q "/Users/e109082/.local/share/zinit/plugins/fmod-demo"
+    }
+    "foobar--za-bgn-orig" "$@"
+    () {
+        setopt localoptions noautopushd
+        builtin cd -q "$oldpwd"
+    }
+}
+```
+
+## fsrc<a name="fsrc"></a>
+
+### Usage<a name="usage-5"></a>
+
+```
+fsrc'\[{g|n|c|N|E|O}:\]{path-to-script}\[ -> {name-of-the-function}\];'
+```
+
+```
+ferc'[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …'
+```
 
 Creates a wrapper function that at each invocation sources the given file. The second ice, `ferc''` works the same with
 the single difference that it uses `eval "$(<{path-to-script})"` instead of `source "{path-to-script}"` to load the
 script.
 
-Example:
+### Example<a name="example-5"></a>
 
 ```zsh
 % zinit ice fsrc"myscript -> myfunc" ferc"myscript"
@@ -381,7 +440,7 @@ myscript () {
 **The ices can be empty**. They will then try to create the function for trailing component of the `id-as` ice and the
 other cases, in the same way as with the `fbin` ice.
 
-# Additional Zinit commands
+## Additional Zinit commands<a name="additional-zinit-commands"></a>
 
 There's an additional Zinit command that's provided by this annex –`shim-list`. It searches for and displays any shims
 that are being currently stored under `$ZPFX/bin`. Example invocation:
@@ -391,23 +450,21 @@ that are being currently stored under `$ZPFX/bin`. Example invocation:
 Available options are:
 
 ```zsh
-zinit shim-list [-h/--help] [-t|--this-dir] [-i|--from-ices] \
- 	    [-o|--one-line] [-s|--short] [-c|--cat]
+zinit shim-list [-h/--help] [-t|--this-dir] [-i|--from-ices] [-o|--one-line] [-s|--short] [-c|--cat]
 ```
 
 The options' meanings:
 
-- `-h/--help` – shows a usage information,
-- `-t/--this-dir` – instructs Zinit to look for shims in the current directory instead of `$ZPFX/bin`,
-- `-i/--from-ices` – normally the code looks for the shim files by examining their contents (shims created by BGN annex
-  have a fixed structure); this option instructs Zinit to show the list of shims that results from the `sbin''` ice of
-  the loaded plugins; i.e.: if a plugin has `sbin'git-open'`, for example, then this means that there has to be such
-  shim already created,
-- `-o/--one-line` – display the list of shim files without line breaks, in single line, after spaces,
-- `-s/--short` – don't show the plugin/snippet that the shim belongs to,
-- `-c/--cat` – displays contents of each of the found shim (unimplemented yet).
+| Option           | Description                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-c/--cat`       | displays contents of each of the found shim (unimplemented yet).                                                                                                                                                                                                                                                                                                |
+| `-h/--help`      | shows a usage information                                                                                                                                                                                                                                                                                                                                       |
+| `-i/--from-ices` | normally the code looks for the shim files by examining their contents (shims created by BGN annex have a fixed structure); this option instructs Zinit to show the list of shims that results from the `sbin''` ice of the loaded plugins; i.e.: if a plugin has `sbin'git-open'`, for example, then this means that there has to be such shim already created |
+| `-o/--one-line`  | display the list of shim files without line breaks, in single line, after spaces                                                                                                                                                                                                                                                                                |
+| `-s/--short`     | don't show the plugin/snippet that the shim belongs to,                                                                                                                                                                                                                                                                                                         |
+| `-t/--this-dir`  | instructs Zinit to look for shims in the current directory instead of `$ZPFX/bin`,                                                                                                                                                                                                                                                                              |
 
-# Cygwin Support
+## Cygwin Support<a name="cygwin-support"></a>
 
 The `sbin''` ice has an explicit Cygwin support – it creates additional, **extra shim files** – Windows batch scripts
 that allow to run the shielded applications from e.g.: Windows run dialog – if the `~/.zinit/polaris/bin` directory is
@@ -418,5 +475,3 @@ can test the feature by e.g.: installing Firefox from the Zinit package via:
 ```zsh
 zinit pack=bgn for firefox
 ```
-
-<!-- vim:set ft=markdown fo+=an1 autoindent tw=77: -->
