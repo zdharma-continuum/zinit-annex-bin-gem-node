@@ -12,7 +12,7 @@ if [[ "$1" = plugin ]] {
     local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
 }
 
-local nl=$'\n'
+local nl=$'\n' trim_whitespace='((#s)[[:space:]]##|[[:space:]]##(#e))' 
 
 #
 # gem'' ice
@@ -33,7 +33,7 @@ if [[ -n "${ICE[gem]}" ]] {
         else
             srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
         fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+        srcdst=("${srcdst[@]//${~trim_whitespace}/}") 
         [[ ${srcdst[2]} = \!* ]] && add_fbin=1 || add_fbin=0
         srcdst[2]=${srcdst[2]#\!}
 
@@ -66,7 +66,7 @@ if [[ -n "${ICE[node]}" ]] {
         else
             srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
         fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+        srcdst=("${srcdst[@]//${~trim_whitespace}/}") 
         [[ ${srcdst[2]} = \!* ]] && add_fbin=1 || add_fbin=0
         srcdst[2]=${srcdst[2]#\!}
 
@@ -99,7 +99,7 @@ if [[ -n "${ICE[pip]}" ]] {
         else
             srcdst=( "${tmpsdst[1]#\!}" "${tmpsdst[1]}" "${srcdst[2]:-${srcdst[1]#\!}}" )
         fi
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+        srcdst=("${srcdst[@]//${~trim_whitespace}/}") 
         [[ ${srcdst[2]} = \!* ]] && add_fbin=1 || add_fbin=0
         srcdst[2]=${srcdst[2]#\!}
 
@@ -159,7 +159,7 @@ if (( ${+ICE[fbin]}${+ICE[fsrc]}${+ICE[ferc]} > 0 )) {
         fi
 
         srcdst=( ${(@s.->.)fbin} )
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+        srcdst=("${srcdst[@]//${~trim_whitespace}/}") 
         [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1
         [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1
         [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1
@@ -198,7 +198,7 @@ if [[ -n "${ICE[fmod]}" ]] {
                 use_all_null=0 use_err_null=0 use_out_null=0
 
         srcdst=( ${(@s.->.)fmod} )
-        srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
+        srcdst=("${srcdst[@]//${~trim_whitespace}/}") 
         [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1
         [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1
         [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1
