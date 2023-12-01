@@ -1,82 +1,90 @@
+#!/usr/bin/env zsh
+#
 # Copyright (c) 2019-2020 Sebastian Gniazdowski
 # License MIT
+#
 
-emulate -RL zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops
+emulate -LR zsh
+setopt extended_glob warn_create_global typeset_silent no_short_loops
 
-[[ "$1" = plugin ]] && \
-    local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" hook="$6" || \
+if [[ "$1" = plugin ]]; then
+    local type="$1" user="$2" plugin="$3" id_as="$4" dir="$5" hook="$6"
+else
     local type="$1" url="$2" id_as="$3" dir="$4" hook="$5"
+fi
 
-local nl=$'\n'
-
-#
-# sbin'' ice – creation of shims (the name borrowed from rbenv)
-#
-
-if (( ${+ICE[sbin]} )) {
+if (( ${+ICE[sbin]} )); then
     local -a sbins srcdst
-    sbins=( ${(s.;.)ICE[sbin]} )
-
+    sbins=(${(s.;.)ICE[sbin]})
+    (( !$#sbins )) && sbins+=("")
     local sbin
-    integer set_gem_home set_node_path set_virtualenv
-
-    ( 
-        builtin cd -q "$dir"
-        for sbin ( $sbins "" ) {
-            if [[ -z $sbin && ${#sbins} -eq 0 ]]; then
+    (
+        builtin cd -q "$dir" || return
+        for sbin in $sbins; do
+            integer set_gem_home=0 set_node_path=0 set_virtualenv=0 set_cwd=0 use_all_null=0 use_err_null=0 use_out_null=0 use_1=0
+            if [[ -z $sbin ]]; then
                 if [[ -f $dir/${id_as:t} ]]; then
                     sbin="$dir/${id_as:t}"
                 elif [[ -n $plugin && -f $dir/$plugin ]]; then
                     sbin="$dir/$plugin"
                 elif [[ -n $url && -f $dir/${url:t} ]]; then
                     sbin="$dir/${url:t}"
+                elif [[ -f $dir/**/($id_as:t|$plugin)(#qN[1].) ]]; then
+                    sbin=($dir/**/($id_as:t|$plugin)(Nnon.))
+                    sbin=$sbin[1]
                 else
                     local -a files
-                    files=( $dir/*(*Nnon:t) )
+                    files=($dir/**/*(*Nnon:t))
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
+                        +zi-log "{m} {b}bin-gem-node{rst}: The automatic-empty sbin ice didn't find any executable files"
                         break
                     fi
                 fi
-            elif [[ -z $sbin ]]; then
-                continue
             fi
-
-            srcdst=( ${(@s.->.)sbin} )
-            srcdst=( "${srcdst[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-            [[ ${srcdst[1]} = [gnpcNEO]#g[gnpcNEO]#:* ]] && set_gem_home=1 || set_gem_home=0
-            [[ ${srcdst[1]} = [gnpcNEO]#n[gnpcNEO]#:* ]] && set_node_path=1 || set_node_path=0
-            [[ ${srcdst[1]} = [gnpcNEO]#p[gnpcNEO]#:* ]] && set_virtualenv=1 || set_virtualenv=0
-            srcdst[1]=${srcdst[1]#[a-zA-Z]#:}
-
-            # Substitute the standard keywords and param''-s
+            srcdst=(${(@s.=>.)${(@s.→.)${(@s.->.)sbin}}})
+            srcdst=("${srcdst[@]//(((#s)[[:space:]]##|[[:space:]]##(#e)))/}")
+            [[ ${srcdst[1]} = [1gnpcNEO]#g[1gnpcNEO]#:* ]] && set_gem_home=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#n[1gnpcNEO]#:* ]] && set_node_path=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#p[1gnpcNEO]#:* ]] && set_virtualenv=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#c[1gnpcNEO]#:* ]] && set_cwd=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#N[1gnpcNEO]#:* ]] && use_all_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#E[1gnpcNEO]#:* ]] && use_err_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#O[1gnpcNEO]#:* ]] && use_out_null=1
+            [[ ${srcdst[1]} = [1gnpcNEO]#1[1gnpcNEO]#:* ]] && use_1=1
+            srcdst[1]=${srcdst[1]#[a-zA-Z0-9]#:}
             @zinit-substitute 'srcdst[1]' 'srcdst[2]'
-
             local -a fnames
             local fname
-            eval "fnames=( ${srcdst[1]}(Nnon-.) )"
-            for fname ( $fnames ) {
+            if [[ $srcdst[1] != /* ]]; then
+                eval "fnames=( **/${srcdst[1]}(Nnon-.) )"
+            else
+                eval "fnames=( ${srcdst[1]}(Nnon-.) )"
+            fi
+            if (( !${#fnames} )); then
+                +zi-log "{w} {b}bin-gem-node{rst}: The sbin ice ({glob}$sbin{rst}) didn't match any files"
+                continue
+            fi
+            for fname in $fnames; do
                 srcdst[1]="$fname"
-                local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}" \
-                    fnam="${srcdst[2]:-${srcdst[1]:t}}"
+                local target_binary="${${(M)srcdst[1]:#/*}:-$dir/${srcdst[1]}}"
+                local fnam="${srcdst[2]:-${srcdst[1]:t}}"
                 local file="$ZPFX/bin/$fnam"
 
                 if [[ -f $file ]]; then
-                    command rm -f "$file"
-                    if [[ -f $file ]]; then
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}Couldn't remove the %F{220}$fnam%F{160} shim from \$ZPFX/bin (no write access to \$ZPFX/bin?)%f"
+                    command rm "$file"
+                    if ! [[ -f $file ]]; then
+                        +zi-log "{m} {b}bin-gem-node{rst}: Deleted {file}$fnam{rst}"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{154}Correctly removed the %F{220}$fnam%F{154} shim from \$ZPFX/bin%f" || \
+                        +zi-log "{e} {b}bin-gem-node{rst}: Failed to delete {file}$fnam{rst}"
                     fi
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}The %F{220}$fnam%F{160} shim didn't exist in \$ZPFX/bin (or isn't a regular file)%f"
+                    +zi-log "{w} {b}bin-gem-node{rst}: {file}$fnam{rst} not found in \$ZPFX/bin"
                 fi
-            }
-        }
+            done
+        done
     )
-}
+fi
 
 # vim:ft=zsh:sw=4:sts=4:et
