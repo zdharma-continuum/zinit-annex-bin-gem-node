@@ -231,7 +231,7 @@ if (( ${+ICE[sbin]} )) {
                         command chmod +x "$file.cmd"
                         continue
                 fi
-                
+
                 .za-bgn-bin-or-src-function-body 0 \
                             "$fnam" \
                             "$target_binary" "$dir" "$set_gem_home" \
@@ -246,13 +246,13 @@ if (( ${+ICE[sbin]} )) {
                     (( !OPTS[opt_-q,--quiet] )) && \
                         if [[ -x $target_binary ]]; then
                             if [[ $hook == atclone-<-> || $ZINIT[annex-multi-flag:pull-active] -ge  2 ]] {
-                                print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim and set +x on the %F{219}${target_binary:t}%F{154} binary%f"
+                                +zi-log "{m} {b}sbin{rst}: ${${${hook:#*atclone-<->}:+Re-c}:-C}reated {file}$fnam{rst} shim  & set +x on the {file}${target_binary:t}{rst} binary"
                             }
                         else
-                            print -P -- "%F{38}bin-gem-node annex: %F{154}${${${hook:#*atclone-<->}:+Re-c}:-C}reated the %F{219}$fnam%F{154} shim %F{160}however the %F{219}${target_binary:t}%F{160} binary does not exist or failed to set +x on it%f"
+                            +zi-log "{m} {b}sbin{rst}: ${${${hook:#*atclone-<->}:+Re-c}:-C}reated {file}$fnam{rst} shim, but {file}${target_binary:t}{rst} binary does not exist or failed to set +x on it"
                         fi
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}Something went wrong creating the %F{219}$fnam%F{160} shim%f"
+                    +zi-log "{e} {b}sbin{rst}: Failed to create {file}$fnam{rst} shim"
                 fi
                 if ((use_1)); then
                     (($#fnames-1)) && \
