@@ -37,7 +37,7 @@ if (( ${+ICE[sbin]} )) {
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}The automatic-empty sbin ice didn't find any executable files%f"
+                        +zi-log "{e} {b}bin-gem-node{rst}: {ice}sbin{rst} ice ({glob}$sbin{rst}) did not match any files"
                         break
                     fi
                 fi
@@ -67,12 +67,12 @@ if (( ${+ICE[sbin]} )) {
                 if [[ -f $file ]]; then
                     command rm -f "$file"
                     if [[ -f $file ]]; then
-                        print -P -- "%F{38}bin-gem-node annex: %F{160}Couldn't remove the %F{220}$fnam%F{160} shim from \$ZPFX/bin (no write access to \$ZPFX/bin?)%f"
+                        +zi-log "{e} {b}sbin{rst}: Failed to delete {file}$fnam{rst} shim in \$ZPFX"
                     else
-                        print -P -- "%F{38}bin-gem-node annex: %F{154}Correctly removed the %F{220}$fnam%F{154} shim from \$ZPFX/bin%f" || \
+                        +zi-log "{m} {b}sbin{rst}: Deleted {file}${fnam}{rst} shim in \$ZPFX"
                     fi
                 else
-                    print -P -- "%F{38}bin-gem-node annex: %F{160}The %F{220}$fnam%F{160} shim didn't exist in \$ZPFX/bin (or isn't a regular file)%f"
+                    +zi-log "{w} {b}sbin{rst}: {file}$fnam{rst} shim not found in \$ZPFX/bin"
                 fi
             }
         }
