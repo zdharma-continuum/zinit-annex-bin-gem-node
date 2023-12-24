@@ -39,7 +39,7 @@ if (( ${+ICE[sbin]} )); then
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        +zi-log "{w} {b}bin-gem-node{rst}: The automatic-empty sbin ice didn't find any executable files%f"
+                        +zi-log "{w} {b}bin-gem-node{rst}: The automatic-empty sbin ice didn't find any executable files"
                         break
                     fi
                 fi
