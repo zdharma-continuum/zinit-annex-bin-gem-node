@@ -39,7 +39,7 @@ if (( ${+ICE[sbin]} )); then
                     if (( ${#files} )); then
                         sbin="${files[1]}"
                     else
-                        +zi-log "{w} {b}bin-gem-node{rst}: The automatic-empty sbin ice didn't find any executable files%f"
+                        +zi-log "{w} {b}bin-gem-node{rst}: The automatic-empty sbin ice didn't find any executable files"
                         break
                     fi
                 fi
@@ -73,7 +73,7 @@ if (( ${+ICE[sbin]} )); then
                 local file="$ZPFX/bin/$fnam"
                 command rm -f "$file"
                 if [[ ! -e $file ]]; then
-                    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} {b}sbin{rst}: Deleted {file}$fnam{rst} shim"
+                    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} {b}sbin{rst}: Removed {file}$fnam{rst} shim"
                 else
                     +zi-log "{w} {b}sbin{rst}: {file}$fnam{rst} shim not found in \$ZPFX/bin"
                 fi
