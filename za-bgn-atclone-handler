@@ -151,15 +151,24 @@ if (( ${+ICE[sbin]} )) {
     sbins=( ${(s.;.)ICE[sbin]} )
 
     (( !$#sbins )) && sbins+=("")
-    local sbin
+    local sbin norcs_flag
 
     (
         # CD for the globbing through eval
         builtin cd -q "$dir" || return
 
-        for sbin ( $sbins  ) {
+        for sbin ( $sbins ) {
             integer set_gem_home=0 set_node_path=0 set_virtualenv=0 set_cwd=0 \
                     use_all_null=0 use_err_null=0 use_out_null=0 use_1=0
+            sbin_norcs=  # Default is shell with zshrc; norcs flag is left empty
+            split_args=  # env requires options `-S` to split arguments
+
+            # Detect '!' at the beginning of sbin
+            if [[ $sbin == "!"* ]]; then
+                sbin_norcs=" -fd" # set NORCS flag; it avoids loading zshenv and zshrc files for a faster execution
+                split_args=" -S" # prompt env to split arguments; check `man env`
+                sbin=${sbin#\!}  # Remove the '!' from the sbin string
+            fi
 
             if [[ -z $sbin ]]; then
                 if [[ -f $dir/${id_as:t} ]]; then
@@ -238,7 +247,7 @@ if (( ${+ICE[sbin]} )) {
                             "$set_node_path" "$set_virtualenv" "$set_cwd" "$use_all_null" \
                             "$use_err_null" "$use_out_null"
 
-                builtin print -r -- "#!/usr/bin/env zsh$nl$nl$REPLY$nl$nl$fnam \"\$@\"" \
+                builtin print -r -- "#!/usr/bin/env$split_args zsh$sbin_norcs$nl$nl$REPLY$nl$nl$fnam \"\$@\"" \
                     >! "$file"
                 command chmod +x "$file" "$target_binary"
 
