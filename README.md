@@ -6,6 +6,10 @@
 - [How it works](#how-it-works)
 - [Ices](#ices)
   - [sbin](#sbin)
+    - [Usage](#usage)
+    - [Example](#sbin-example)
+    - [Bypass parsing RC config files](#sbin-bypass-rc)
+    - [sbin vs. lbin](#sbin-vs-lbin)
   - [fbin](#fbin)
   - [gem](#gem)
   - [node](#node)
@@ -46,9 +50,9 @@ zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
 After executing this command, you can use the new ice mods provided by the annex.
 
-## How it works<a name="how-it-works"></a>
 
-**Note:** The README is somewhat outdated – the `sbin''` ice that creates forwarder scripts instead of
+## How it works<a name="how-it-works"></a>
+**Note:** The README is somewhat outdated – the `sbin''` ice that creates forwarder scripts (shim) instead of
 forwarder-functions (created by the `fbin''` ice and elaborated in this `How it works …` section) turned out to be the
 proper, best method for exposing binary programs and scripts. You can jump to the `sbin''` ice
 [section](#5-sbingncneopath-to-binary---name-of-the-script-) if you want or read on, as the forwarder-scripts are pretty
@@ -114,21 +118,6 @@ fzf "$@"
 Running the script will forward the call to the program accessed through an embedded path to it. Thus, no `$PATH`
 changes are needed!
 
-## Ices<a name="ices"></a>
-
-There are seven ice modifiers provided and handled by the annex. They are:
-
-| ice  | description                                                                                             |
-| ---- | ------------------------------------------------------------------------------------------------------- |
-| fbin | creates functions for binaries and scripts.                                                             |
-| ferc | the same as fsrc, but using an alternate script-loading method.                                         |
-| fmod | creates wrapping functions for other functions.                                                         |
-| fsrc | creates functions that source given scripts.                                                            |
-| gem  | installs and updates gems + create functions for gems binaries.                                         |
-| node | installs and updates node_modules + create functions for binaries of the modules.                       |
-| pip  | installs and updates Python packages into a virtualenv + create functions for binaries of the packages. |
-| sbin | creates shims for binaries and scripts.                                                                 |
-
 ### sbin<a name="sbin"></a>
 
 #### Usage<a name="usage"></a>
@@ -143,7 +132,7 @@ by default).
 
 The flags have the same meaning as with `fbin''` ice.
 
-#### Example<a name="example"></a>
+#### Example<a name="sbin-example"></a>
 
 ```zsh
 % zinit delete junegunn/fzf-bin
@@ -165,6 +154,13 @@ function fzf {
 fzf "$@"
 ```
 
+Running the script will forward the call to the program accessed through an embedded path to it. Thus, no `$PATH`
+changes are needed!
+
+---
+
+#### Empty `sbin` ICE<a name="empty-sbin"></a>
+
 **The ice can be empty**. It will then try to create the shim for:
 
 - trailing component of the `id_as` ice, e.g., `id_as'exts/git-my'` → it'll check if a file `git-my` exists, and if yes,
@@ -173,6 +169,62 @@ fzf "$@"
   `git-open`,
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
+
+---
+
+#### Modifier `!` for `sbin` ICE<a name="sbin-bypass-rc"></a>
+
+By default, the generated shim uses the shebang `#!/usr/bin/env zsh`, which starts `zsh` with all user and system configuration files.
+
+When the `sbin` ICE is prefixed with `!`, the generated shim is instead created with:
+
+```zsh
+#!/usr/bin/env -S zsh -fd
+```
+
+This starts `zsh` in **NO RCS mode**, which means that both `zshenv` and `zshrc` (local and global) are skipped. This can significantly **reduce startup time by 100-200ms**, as no unnecessary shell initialization occurs.
+
+**When to use `!`:**
+- Use `!` when launching a **command-line program** where startup speed is important.
+- Avoid `!` if the binary depends on configuration from `.zshrc` or `.zshenv`.
+- **Edge case:** If the shim is executed from an external GUI launcher (e.g., desktop icons), omitting `!` may be necessary to load expected shell environment variables.
+
+**Example usage:**
+
+```zsh
+% zinit ice from"gh-r" sbin"!fzf"
+% zinit load junegunn/fzf-bin
+```
+
+The resulting shim will start with the shebang:
+
+```zsh
+#!/usr/bin/env -S zsh -fd
+```
+
+---
+
+#### When to Use `sbin` vs. `lbin`<a name="sbin-vs-lbin"></a>
+
+For simple binaries with no dependencies, `sbin` may not be necessary. Instead, a **symlink-based** approach can be used via the `lbin` ICE provided by the [`zinit-annex-binary-symlink`](https://github.com/zdharma-continuum/zinit-annex-binary-symlink) annex.
+
+In practice, you can safely use `lbin` instead of `sbin` if:
+- The binary **does not** spawn subprocesses.
+- The binary **does not** require sourcing anything from the plugin directory.
+- The binary **does not** need to modify `$PATH`.
+
+Remember: the modifier `!` together with `lbin` creates a soft instead of a hard link.
+
+For example:
+
+```zsh
+zinit ice from"gh-r" lbin'!bat(.exe|) -> bat'
+zinit load @sharkdp/bat
+```
+
+This method avoids unnecessary shims and simply links the binary into `$ZPFX/bin`, making it directly executable.
+
+If your binary requires a proper execution environment (e.g., `$GEM_HOME`, `$NODE_PATH`, or `cd` to the plugin directory), use `sbin` instead.
 
 ### fbin<a name="fbin"></a>
 
