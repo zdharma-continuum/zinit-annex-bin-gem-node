@@ -151,7 +151,7 @@ if (( ${+ICE[sbin]} )) {
     sbins=( ${(s.;.)ICE[sbin]} )
 
     (( !$#sbins )) && sbins+=("")
-    local sbin norcs_flag
+    local sbin sbin_norcs split_args
 
     (
         # CD for the globbing through eval
