@@ -22,17 +22,17 @@
 
 <!-- mdformat-toc end -->
 
-A Zsh-Zinit annex (i.e., an extension) that provides functionality that allows to:
+A Zsh-Zinit annex (i.e., an extension) that provides functionality that allows:
 
 1. Run programs and scripts without adding anything to `$PATH`,
-1. Install and run Ruby [gems](https://github.com/rubygems/rubygems), [Node](https://github.com/npm/cli) and
+1. Install and run Ruby [gems](https://github.com/rubygems/rubygems), [Node](https://github.com/npm/cli), and
    [Python](https://python.org) modules from within a local directory with
-   [$GEM_HOME](https://guides.rubygems.org/command-reference/#gem-environment) ,
+   [$GEM_HOME](https://guides.rubygems.org/command-reference/#gem-environment),
    [$NODE_PATH](https://nodejs.org/api/modules.html#modules_loading_from_the_global_folders) and
-   [$VIRTUALENV](https://docs.python.org/3/tutorial/venv.html) automatically set,
+   [$VIRTUALENV](https://docs.python.org/3/tutorial/venv.html) is automatically set,
 1. Run programs, scripts, and functions with automatic `cd` into the plugin or snippet directory, plus also with
    automatic standard output & standard error redirecting.
-1. Source scripts through an automatically created function with the above `$GEM_HOME`, `$NODE_PATH`, `$VIRTUALENV` and
+1. Source scripts through an automatically created function with the above `$GEM_HOME`, `$NODE_PATH`, `$VIRTUALENV`, and
    `cd` features available,
 1. Create the so-called `shims` known from [rbenv](https://github.com/rbenv/rbenv) – the same feature as the first item
    of this enumeration – of running a program without adding anything to `$PATH` with all of the above features, however
@@ -56,7 +56,7 @@ After executing this command, you can use the new ice mods provided by the annex
 forwarder-functions (created by the `fbin''` ice and elaborated in this `How it works …` section) turned out to be the
 proper, best method for exposing binary programs and scripts. You can jump to the `sbin''` ice
 [section](#5-sbingncneopath-to-binary---name-of-the-script-) if you want or read on, as the forwarder-scripts are pretty
-similar to the forwarder-functions elaborated on in the following text:
+similar to the forwarder functions elaborated on in the following text:
 
 Below is a diagram explaining the major feature – exposing a binary program or script through a Zsh function of the same
 name:
@@ -64,14 +64,14 @@ name:
 ![diagram](https://raw.githubusercontent.com/zdharma-continuum/zinit-annex-bin-gem-node/main/images/diag.png)
 
 This way, there is no need to add anything to `$PATH` – `zinit-annex-bin-gem-node` will automatically create a function
-that will wrap the binary and provide it on the command line as if it was being placed in the `$PATH`.
+that will wrap the binary and provide it on the command line as if it were placed in the `$PATH`.
 
 Also, as mentioned in the enumeration, the function can automatically export `$GEM_HOME`, `$NODE_PATH`, `$VIRTUALENV`
-shell variables and also automatically cd into the plugin or snippet directory right before executing the binary and
+shell variables and also automatically cd into the plugin or snippet directory right before executing the binary, and
 then cd back to the original directory after the execution is finished.
 
 Also, as already mentioned, instead of the function, an automatically created script – so-called `shim` – can be used
-for the same purpose and with the same functionality so that the command is accessible practically fully and normally –
+for the same purpose and with the same functionality, so that the command is accessible practically fully and normally –
 not only in the live Zsh session (only within which the functions created by `fbin''` exist) but also from any Zsh
 script.
 
@@ -84,7 +84,7 @@ zinit ice as"command" from"github-rel"
 zinit load junegunn/fzf-bin
 ```
 
-After this command, the `$PATH` variable will contain e.g.:
+After this command, the `$PATH` variable will contain, e.g.:
 
 ```zsh
 % print $PATH
@@ -165,7 +165,7 @@ changes are needed!
 
 - trailing component of the `id_as` ice, e.g., `id_as'exts/git-my'` → it'll check if a file `git-my` exists, and if yes,
   create the shim `git-my`,
-- the plugin name, e.g., for `paulirish/git-open`, it'll check if a file `git-open` exists and if yes, create the shim
+- the plugin name, e.g., for `paulirish/git-open`, it'll check if a file `git-open` exists, and if yes, create the shim
   `git-open`,
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
@@ -222,7 +222,7 @@ zinit ice from"gh-r" lbin'!bat(.exe|) -> bat'
 zinit load @sharkdp/bat
 ```
 
-This method avoids unnecessary shims and simply links the binary into `$ZPFX/bin`, making it directly executable.
+This method avoids unnecessary shims and links the binary into `$ZPFX/bin`, making it directly executable.
 
 If your binary requires a proper execution environment (e.g., `$GEM_HOME`, `$NODE_PATH`, or `cd` to the plugin directory), use `sbin` instead.
 
@@ -232,17 +232,17 @@ If your binary requires a proper execution environment (e.g., `$GEM_HOME`, `$NOD
 fbin'[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-function}]; …' 
 ```
 
-Creates a wrapper function of the name the same as the last segment of the path or as `{name-of-the-function}`. The
+Creates a wrapper function with the same name as the path's last segment or as `{name-of-the-function}`. The
 optional preceding flags mean:
 
 - `g` – set `$GEM_HOME` variable to `{plugin-dir}`,
 - `n` – set `$NODE_PATH` variable to `{plugin-dir}/node_modules`,
 - `p` – set `$VIRTUALENV` variable to `{plugin-dir}/venv`,
 - `c` – cd to the plugin's directory before running the program and then cd back after it has been run,
-- `N` – append `&>/dev/null` to the call of the binary, i.e. redirect both standard output and standard error to
+- `N` – append `&>/dev/null` to the call of the binary, i.e., redirect both standard output and standard error to
   `/dev/null`,
 - `E` – append `2>/dev/null` to the call of the binary, i.e., redirect standard error to `/dev/null`,
-- `O` – append `>/dev/null` to the call of the binary, i.e., redirect standard output to `/dev/null`.
+- `O` – append `>/dev/null` to the binary call, i.e., redirect standard output to `/dev/null`.
 
 #### Example:<a name="example"></a>
 
@@ -261,7 +261,7 @@ myfzf () {
 
 - trailing component of the `id_as` ice, e.g., `id_as'exts/git-my'` → it'll check if a file `git-my` exists, and if yes,
   create the function `git-my`,
-- the plugin name, e.g., for `paulirish/git-open`, it'll check if a file `git-open` exists and if yes, create the
+- the plugin name, e.g., for `paulirish/git-open`, it'll check if a file `git-open` exists, and if yes, create the
   function `git-open`,
 - trailing component of the snippet URL,
 - for any alphabetically first executable file.
@@ -278,10 +278,10 @@ gem'{gem-name};'
 gem"[{path-to-binary} <-] !{gem-name} [-> {name-of-the-function}]; …"
 ```
 
-Installs the gem of the name `{gem-name}` with `$GEM_HOME` set to the plugin's or snippet's directory. In other words,
+Installs the gem of `{gem-name}` with `$GEM_HOME` set to the plugin's or snippet's directory. In other words,
 the gem and its dependencies will be installed locally in that directory.
 
-In the second form, it also creates a wrapper function identical to the one created with `fbin''` ice.
+The second form also creates a wrapper function identical to the one created with `fbin''` ice.
 
 #### Example<a name="example-1"></a>
 
@@ -306,9 +306,9 @@ node'{node-module}; …'
 
 node'\[{path-to-binary} \<-\] !{node-module} \[-> {name-of-the-function}\];
 
-Installs the node module of name `{node-module}` inside the plugin's or snippet's directory.
+Installs the node module named `{node-module}` inside the plugin's or snippet's directory.
 
-In the second form it also creates a wrapper function identical to the one created with `fbin''` ice.
+The second form also creates a wrapper function identical to the one created with `fbin''` ice.
 
 #### Example<a name="example-2"></a>
 
@@ -345,7 +345,7 @@ form with the `b <- a -> c` syntax has been used.
 
 #### Usage<a name="usage-3"></a>
 
-Install the Python package of the name `{pip-package}` inside a plugin or snippet directory.
+Install the Python package named `{pip-package}` inside a plugin or snippet directory.
 
 ```zsh
 pip'{pip-package}`
@@ -393,7 +393,7 @@ ansible [core 2.15.4]
   libyaml = True
 ```
 
-In this case, the name of the binary program provided by the pip package is different from its name,; the second form
+In this case, the name of the binary program provided by the pip package is different from its name, the second form
 with the `b <- a -> c` syntax has been used.
 
 ### fmod<a name="fmod"></a>
@@ -520,8 +520,8 @@ the other cases, in the same way as with the `fbin` ice.
 
 ## shim-list<a name="shim-list"></a>
 
-There's an additional Zinit command that's provided by this annex –`shim-list`. It searches for and displays any shims
-that are currently being stored under `$ZPFX/bin`. Example invocation:
+An additional Zinit command is provided by this annex: `shim-list`. It searches for and displays shims
+stored under `$ZPFX/bin`. Example invocation:
 
 ![shim-list invocation](https://raw.githubusercontent.com/zdharma-continuum/zinit-annex-bin-gem-node/main/images/shim-list.png)
 
@@ -531,7 +531,7 @@ Available options are:
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-c/--cat`       | displays the contents of each of the found shim (unimplemented yet).                                                                                                                                                                                                                                                                                            |
 | `-h/--help`      | shows a usage information                                                                                                                                                                                                                                                                                                                                       |
-| `-i/--from-ices` | normally, the code looks for the shim files by examining their contents (shims created by BGN annex have a fixed structure); this option instructs Zinit to show the list of shims that result from the `sbin''` ice of the loaded plugins; i.e., if a plugin has `sbin'git-open'`, for example, then this means that there has to be such shim already created |
+| `-i/--from-ices` | normally, the code looks for the shim files by examining their contents (shims created by BGN annex have a fixed structure); this option instructs Zinit to show the list of shims that result from the `sbin''` ice of the loaded plugins; i.e., if a plugin has `sbin'git-open'`, for example, then this means that there has to be such a shim already created |
 | `-o/--one-line`  | display the list of shim files without line breaks, in a single line, after spaces                                                                                                                                                                                                                                                                              |
 | `-s/--short`     | don't show the plugin/snippet that the shim belongs to,                                                                                                                                                                                                                                                                                                         |
 | `-t/--this-dir`  | instructs Zinit to look for shims in the current directory instead of `$ZPFX/bin`,                                                                                                                                                                                                                                                                              |
